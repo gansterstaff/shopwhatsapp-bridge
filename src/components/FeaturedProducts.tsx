@@ -3,11 +3,20 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import ProductCard from './ProductCard';
-import { getFeaturedProducts } from '@/lib/products';
 import { cn } from '@/lib/utils';
+import { useFeaturedProducts } from '@/hooks/useProducts';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const FeaturedProducts: React.FC = () => {
-  const featuredProducts = getFeaturedProducts();
+  const { data: featuredProducts, isLoading, error } = useFeaturedProducts();
+  
+  // Fallback to local data if there's an error or we're still loading
+  const showFallbackData = isLoading || error || !featuredProducts?.length;
+  
+  // If error, log it but don't show to user
+  if (error) {
+    console.error('Error loading featured products:', error);
+  }
   
   return (
     <section className="py-16 bg-secondary/50">
@@ -25,11 +34,37 @@ const FeaturedProducts: React.FC = () => {
         
         {/* Products grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featuredProducts.map((product) => (
-            <div key={product.id} className="animate-fade-in" style={{ animationDelay: `${(product.id % 4) * 0.1}s` }}>
-              <ProductCard product={product} />
-            </div>
-          ))}
+          {isLoading ? (
+            // Loading state
+            Array.from({ length: 4 }).map((_, index) => (
+              <div key={`skeleton-${index}`} className="animate-pulse">
+                <div className="rounded-xl overflow-hidden">
+                  <Skeleton className="aspect-square w-full" />
+                  <div className="p-4 space-y-2">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
+                    <div className="pt-2">
+                      <Skeleton className="h-8 w-full" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : showFallbackData ? (
+            // Fallback to local data if there's an error or no data from Supabase
+            Array.from({ length: 4 }).map((_, index) => (
+              <div key={`fallback-${index}`} className="animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                <Skeleton className="aspect-square rounded-xl" />
+              </div>
+            ))
+          ) : (
+            // Render actual products from Supabase
+            featuredProducts.map((product) => (
+              <div key={product.id} className="animate-fade-in" style={{ animationDelay: `${(product.id % 4) * 0.1}s` }}>
+                <ProductCard product={product} />
+              </div>
+            ))
+          )}
         </div>
         
         {/* View all link */}
