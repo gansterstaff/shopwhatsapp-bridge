@@ -1,12 +1,36 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { ShoppingCart, Menu, X, Search, User } from 'lucide-react';
+import { ShoppingCart, Menu, X, Search, User, LogOut } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { useAuth } from '@/contexts/AuthContext';
+import { useCart } from '@/contexts/CartContext';
+import { 
+  Sheet, 
+  SheetContent, 
+  SheetHeader, 
+  SheetTitle, 
+  SheetTrigger,
+  SheetFooter,
+  SheetClose
+} from "@/components/ui/sheet";
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const { items, total, removeItem } = useCart();
+  const navigate = useNavigate();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -16,6 +40,19 @@ const Header: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(part => part[0])
+      .join('')
+      .toUpperCase();
+  };
   
   return (
     <header 
@@ -40,13 +77,13 @@ const Header: React.FC = () => {
               Home
             </Link>
             <Link to="/products" className="nav-link font-medium text-sm">
-              Products
+              Productos
             </Link>
             <Link to="/about" className="nav-link font-medium text-sm">
-              About
+              Nosotros
             </Link>
             <Link to="/contact" className="nav-link font-medium text-sm">
-              Contact
+              Contacto
             </Link>
           </nav>
           
@@ -55,15 +92,124 @@ const Header: React.FC = () => {
             <button className="p-2 hover:bg-secondary rounded-full transition-colors">
               <Search className="h-5 w-5" />
             </button>
-            <Link to="/cart" className="p-2 hover:bg-secondary rounded-full transition-colors relative">
-              <ShoppingCart className="h-5 w-5" />
-              <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                0
-              </span>
-            </Link>
-            <Link to="/account" className="p-2 hover:bg-secondary rounded-full transition-colors">
-              <User className="h-5 w-5" />
-            </Link>
+
+            {/* Mini Cart */}
+            <Sheet>
+              <SheetTrigger asChild>
+                <button className="p-2 hover:bg-secondary rounded-full transition-colors relative">
+                  <ShoppingCart className="h-5 w-5" />
+                  {items.length > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      {items.length}
+                    </span>
+                  )}
+                </button>
+              </SheetTrigger>
+              <SheetContent className="w-full sm:max-w-md">
+                <SheetHeader>
+                  <SheetTitle>Tu Carrito ({items.length})</SheetTitle>
+                </SheetHeader>
+                {items.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-60">
+                    <ShoppingCart className="h-12 w-12 text-gray-300 mb-4" />
+                    <p className="text-gray-500">Tu carrito está vacío</p>
+                    <SheetClose asChild>
+                      <Button asChild className="mt-4">
+                        <Link to="/products">Ver productos</Link>
+                      </Button>
+                    </SheetClose>
+                  </div>
+                ) : (
+                  <div className="flex flex-col h-full max-h-full">
+                    <div className="flex-1 overflow-auto py-4">
+                      <ul className="space-y-4">
+                        {items.map(item => (
+                          <li key={item.product.id} className="flex items-center space-x-3 py-2">
+                            <img 
+                              src={item.product.image} 
+                              alt={item.product.name} 
+                              className="h-16 w-16 object-cover rounded-md"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <h4 className="text-sm font-medium truncate">{item.product.name}</h4>
+                              <p className="text-sm text-gray-500">
+                                {item.quantity} x ${item.product.price.toFixed(2)}
+                              </p>
+                            </div>
+                            <Button 
+                              variant="ghost" 
+                              size="icon"
+                              className="text-gray-500 hover:text-red-500"
+                              onClick={() => removeItem(item.product.id)}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="border-t pt-4">
+                      <div className="flex justify-between py-2">
+                        <span className="font-medium">Total:</span>
+                        <span className="font-bold">${total.toFixed(2)}</span>
+                      </div>
+                      <div className="flex flex-col space-y-2 mt-4">
+                        <SheetClose asChild>
+                          <Button asChild>
+                            <Link to="/cart">Ver carrito</Link>
+                          </Button>
+                        </SheetClose>
+                        <SheetClose asChild>
+                          <Button variant="outline" asChild>
+                            <Link to="/products">Seguir comprando</Link>
+                          </Button>
+                        </SheetClose>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </SheetContent>
+            </Sheet>
+
+            {/* User Menu */}
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="p-1 hover:bg-secondary rounded-full transition-colors">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={user.user_metadata?.avatar_url || ''} />
+                      <AvatarFallback>
+                        {user.user_metadata?.name 
+                          ? getInitials(user.user_metadata.name) 
+                          : user.email?.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Mi cuenta</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile">Perfil</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/orders">Mis pedidos</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/settings">Configuración</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut} className="text-red-500">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Cerrar sesión
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link to="/login" className="p-2 hover:bg-secondary rounded-full transition-colors">
+                <User className="h-5 w-5" />
+              </Link>
+            )}
             
             {/* Mobile menu button */}
             <button 
@@ -97,22 +243,58 @@ const Header: React.FC = () => {
             className="text-lg font-medium p-2 hover:bg-secondary rounded-md transition-colors"
             onClick={() => setIsMobileMenuOpen(false)}
           >
-            Products
+            Productos
           </Link>
           <Link 
             to="/about" 
             className="text-lg font-medium p-2 hover:bg-secondary rounded-md transition-colors"
             onClick={() => setIsMobileMenuOpen(false)}
           >
-            About
+            Nosotros
           </Link>
           <Link 
             to="/contact" 
             className="text-lg font-medium p-2 hover:bg-secondary rounded-md transition-colors"
             onClick={() => setIsMobileMenuOpen(false)}
           >
-            Contact
+            Contacto
           </Link>
+          
+          {user ? (
+            <>
+              <Link 
+                to="/profile" 
+                className="text-lg font-medium p-2 hover:bg-secondary rounded-md transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Mi Perfil
+              </Link>
+              <Link 
+                to="/orders" 
+                className="text-lg font-medium p-2 hover:bg-secondary rounded-md transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Mis Pedidos
+              </Link>
+              <button 
+                onClick={() => {
+                  handleSignOut();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="text-lg font-medium p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors text-left"
+              >
+                Cerrar sesión
+              </button>
+            </>
+          ) : (
+            <Link 
+              to="/login" 
+              className="text-lg font-medium p-2 hover:bg-secondary rounded-md transition-colors"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Iniciar sesión
+            </Link>
+          )}
         </nav>
       </div>
     </header>

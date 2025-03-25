@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   user: User | null;
@@ -10,6 +11,9 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, name: string) => Promise<void>;
   signOut: () => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
+  signInWithGithub: () => Promise<void>;
+  signInWithFacebook: () => Promise<void>;
   loading: boolean;
 }
 
@@ -20,6 +24,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Get initial session
@@ -48,12 +53,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
       toast({
-        title: "Welcome back!",
-        description: "You've successfully signed in.",
+        title: "Bienvenido de nuevo!",
+        description: "Has iniciado sesión correctamente.",
       });
+      navigate('/');
     } catch (error: any) {
       toast({
-        title: "Error signing in",
+        title: "Error al iniciar sesión",
         description: error.message,
         variant: "destructive",
       });
@@ -93,12 +99,70 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       
       toast({
-        title: "Account created!",
-        description: "Please check your email to confirm your account.",
+        title: "Cuenta creada!",
+        description: "Por favor, verifica tu correo electrónico para confirmar tu cuenta.",
       });
+      navigate('/');
     } catch (error: any) {
       toast({
-        title: "Error signing up",
+        title: "Error al registrarse",
+        description: error.message,
+        variant: "destructive",
+      });
+      throw error;
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+      if (error) throw error;
+    } catch (error: any) {
+      toast({
+        title: "Error al iniciar sesión con Google",
+        description: error.message,
+        variant: "destructive",
+      });
+      throw error;
+    }
+  };
+
+  const signInWithGithub = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+      if (error) throw error;
+    } catch (error: any) {
+      toast({
+        title: "Error al iniciar sesión con Github",
+        description: error.message,
+        variant: "destructive",
+      });
+      throw error;
+    }
+  };
+
+  const signInWithFacebook = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'facebook',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+      if (error) throw error;
+    } catch (error: any) {
+      toast({
+        title: "Error al iniciar sesión con Facebook",
         description: error.message,
         variant: "destructive",
       });
@@ -111,12 +175,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       toast({
-        title: "Signed out",
-        description: "You've been successfully signed out.",
+        title: "Sesión cerrada",
+        description: "Has cerrado sesión correctamente.",
       });
+      navigate('/');
     } catch (error: any) {
       toast({
-        title: "Error signing out",
+        title: "Error al cerrar sesión",
         description: error.message,
         variant: "destructive",
       });
@@ -130,6 +195,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signIn,
     signUp,
     signOut,
+    signInWithGoogle,
+    signInWithGithub,
+    signInWithFacebook,
     loading,
   };
 
