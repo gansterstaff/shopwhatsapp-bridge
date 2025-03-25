@@ -26,6 +26,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
       description: `${name} ha sido añadido a tu carrito`,
     });
   };
+
+  // WhatsApp message generator
+  const generateWhatsAppLink = (product: Product) => {
+    const message = `Hola, estoy interesado en comprar el producto: *${product.name}* por $${product.price}. ¿Podría darme más información?`;
+    return `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
+  };
   
   return (
     <div 
@@ -131,7 +137,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
           </button>
           
           <a 
-            href={`https://wa.me/1234567890?text=Hola,%20estoy%20interesado%20en%20${encodeURIComponent(name)}%20por%20$${price}`} 
+            href={generateWhatsAppLink(product)}
             target="_blank" 
             rel="noopener noreferrer"
             className={cn(

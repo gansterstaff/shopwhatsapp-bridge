@@ -3,6 +3,10 @@ import React, { useEffect } from 'react';
 import Hero from '@/components/Hero';
 import FeaturedProducts from '@/components/FeaturedProducts';
 import Benefits from '@/components/Benefits';
+import Testimonials from '@/components/Testimonials';
+import Newsletter from '@/components/Newsletter';
+import Categories from '@/components/Categories';
+import WhyChooseUs from '@/components/WhyChooseUs';
 
 const Index: React.FC = () => {
   // Add a smooth scroll effect when page loads
@@ -17,8 +21,12 @@ const Index: React.FC = () => {
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow">
         <Hero />
+        <Categories />
         <FeaturedProducts />
+        <WhyChooseUs />
         <Benefits />
+        <Testimonials />
+        <Newsletter />
       </main>
     </div>
   );
