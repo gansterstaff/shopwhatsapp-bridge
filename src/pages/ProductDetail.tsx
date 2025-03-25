@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useProductById } from '@/hooks/useProducts';
@@ -17,7 +16,7 @@ import {
   MinusCircle,
   PlusCircle,
   Star,
-  Discount
+  Percent
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -125,7 +124,7 @@ const ProductDetail = () => {
         <div className="relative overflow-hidden rounded-lg bg-gray-50 flex items-center justify-center p-8">
           {product.discount && (
             <Badge variant="destructive" className="absolute top-4 left-4 flex items-center gap-1">
-              <Discount className="h-3 w-3" />
+              <Percent className="h-3 w-3" />
               {product.discount}% DESCUENTO
             </Badge>
           )}

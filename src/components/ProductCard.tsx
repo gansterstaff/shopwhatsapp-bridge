@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { ShoppingCart, ExternalLink, Star, Discount } from 'lucide-react';
+import { ShoppingCart, ExternalLink, Star, Percent } from 'lucide-react';
 import type { Product } from '@/lib/types';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/hooks/use-toast';
@@ -39,7 +39,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
       {/* Discount badge */}
       {discount && (
         <div className="absolute top-3 left-3 z-10 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
-          <Discount className="h-3 w-3" />
+          <Percent className="h-3 w-3" />
           {discount}% DESCUENTO
         </div>
       )}
