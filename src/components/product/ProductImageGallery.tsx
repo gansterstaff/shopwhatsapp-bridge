@@ -15,12 +15,13 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
   discount 
 }) => {
   return (
-    <div className="relative">
-      <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+    <div className="relative overflow-hidden rounded-lg">
+      <div className="aspect-square bg-gray-50 rounded-lg overflow-hidden flex items-center justify-center">
         <img 
           src={image} 
           alt={name} 
           className="w-full h-full object-contain p-4"
+          loading="lazy"
         />
       </div>
       {discount && (

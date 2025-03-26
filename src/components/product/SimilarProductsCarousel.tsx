@@ -30,19 +30,18 @@ const SimilarProductsCarousel: React.FC<SimilarProductsCarouselProps> = ({
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-base font-medium">{title}</h3>
       </div>
-      <div className="relative">
-        <Carousel className="w-full">
-          <CarouselContent className="-ml-2 md:-ml-4">
-            {products.map((item) => (
-              <CarouselItem key={`${title}-${item.id}`} className="pl-2 md:pl-4 sm:basis-1/2 md:basis-1/3">
-                <SimilarProductCard product={item} onNavigate={onProductSelect} />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="absolute -left-4 top-1/3 transform -translate-y-1/2" />
-          <CarouselNext className="absolute -right-4 top-1/3 transform -translate-y-1/2" />
-        </Carousel>
-      </div>
+      
+      <Carousel className="w-full relative">
+        <CarouselContent className="-ml-2 md:-ml-4">
+          {products.map((item) => (
+            <CarouselItem key={`${title}-${item.id}`} className="pl-2 md:pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/3">
+              <SimilarProductCard product={item} onNavigate={onProductSelect} />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="absolute -left-2 md:-left-4 top-1/2 transform -translate-y-1/2 h-8 w-8 md:h-8 md:w-8" />
+        <CarouselNext className="absolute -right-2 md:-right-4 top-1/2 transform -translate-y-1/2 h-8 w-8 md:h-8 md:w-8" />
+      </Carousel>
     </div>
   );
 };

@@ -2,21 +2,34 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Product } from '@/lib/types';
+import { products as mockProducts } from '@/lib/products';
 
 export const useProducts = () => {
   return useQuery({
     queryKey: ['products'],
     queryFn: async (): Promise<Product[]> => {
-      const { data, error } = await supabase
-        .from('products')
-        .select('*');
-      
-      if (error) {
-        console.error('Error fetching products:', error);
-        throw new Error(error.message);
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*');
+        
+        if (error) {
+          console.error('Error fetching products:', error);
+          console.log('Falling back to mock data');
+          return mockProducts;
+        }
+        
+        if (data && data.length > 0) {
+          return data as Product[];
+        } else {
+          console.log('No products found in database, using mock data');
+          return mockProducts;
+        }
+      } catch (e) {
+        console.error('Error in useProducts:', e);
+        console.log('Falling back to mock data');
+        return mockProducts;
       }
-      
-      return data as Product[];
     },
   });
 };
@@ -25,17 +38,29 @@ export const useFeaturedProducts = () => {
   return useQuery({
     queryKey: ['featured-products'],
     queryFn: async (): Promise<Product[]> => {
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('featured', true);
-      
-      if (error) {
-        console.error('Error fetching featured products:', error);
-        throw new Error(error.message);
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .eq('featured', true);
+        
+        if (error) {
+          console.error('Error fetching featured products:', error);
+          console.log('Falling back to mock featured data');
+          return mockProducts.filter(product => product.featured);
+        }
+        
+        if (data && data.length > 0) {
+          return data as Product[];
+        } else {
+          console.log('No featured products found in database, using mock data');
+          return mockProducts.filter(product => product.featured);
+        }
+      } catch (e) {
+        console.error('Error in useFeaturedProducts:', e);
+        console.log('Falling back to mock data');
+        return mockProducts.filter(product => product.featured);
       }
-      
-      return data as Product[];
     },
   });
 };
@@ -44,18 +69,30 @@ export const useProductById = (id: number) => {
   return useQuery({
     queryKey: ['product', id],
     queryFn: async (): Promise<Product | null> => {
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('id', id)
-        .single();
-      
-      if (error) {
-        console.error(`Error fetching product ${id}:`, error);
-        throw new Error(error.message);
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .eq('id', id)
+          .maybeSingle();
+        
+        if (error) {
+          console.error(`Error fetching product ${id}:`, error);
+          console.log('Falling back to mock product data');
+          return mockProducts.find(p => p.id === id) || null;
+        }
+        
+        if (data) {
+          return data as Product;
+        } else {
+          console.log(`No product found with id ${id}, using mock data`);
+          return mockProducts.find(p => p.id === id) || null;
+        }
+      } catch (e) {
+        console.error(`Error in useProductById (${id}):`, e);
+        console.log('Falling back to mock data');
+        return mockProducts.find(p => p.id === id) || null;
       }
-      
-      return data as Product;
     },
     enabled: !!id,
   });

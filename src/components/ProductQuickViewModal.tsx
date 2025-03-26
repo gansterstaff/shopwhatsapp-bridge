@@ -14,7 +14,7 @@ import { Product } from '@/lib/types';
 import { useCart } from '@/contexts/CartContext';
 import { useProducts } from '@/hooks/useProducts';
 
-// Import our new component files
+// Import our component files
 import ProductImageGallery from './product/ProductImageGallery';
 import ProductInfo from './product/ProductInfo';
 import QuantitySelector from './product/QuantitySelector';
@@ -40,14 +40,23 @@ const ProductQuickViewModal: React.FC<ProductQuickViewModalProps> = ({
   const [selectedWarranty, setSelectedWarranty] = useState<string>("none");
   const { data: allProducts, isLoading } = useProducts();
   const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
+  const [popularProducts, setPopularProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     if (allProducts && product) {
       // Filter for similar products (same category, excluding current product)
       const filtered = allProducts.filter(p => 
         p.category === product.category && p.id !== product.id
-      ).slice(0, 6); // Limit to 6 similar products
-      setSimilarProducts(filtered);
+      ); 
+      
+      // Split products for two different carousels
+      if (filtered.length > 3) {
+        setSimilarProducts(filtered.slice(0, 3));
+        setPopularProducts(filtered.slice(3, 6));
+      } else {
+        setSimilarProducts(filtered);
+        setPopularProducts(filtered);
+      }
     }
   }, [allProducts, product]);
 
@@ -103,21 +112,23 @@ const ProductQuickViewModal: React.FC<ProductQuickViewModalProps> = ({
         <ReturnPolicy />
         
         {/* Similar Products Sections */}
-        {similarProducts.length > 0 && (
-          <>
+        <div className="mt-4 space-y-6">
+          {similarProducts.length > 0 && (
             <SimilarProductsCarousel
               title="Varias personas después miran"
               products={similarProducts}
               onProductSelect={() => onOpenChange(false)}
             />
-            
+          )}
+          
+          {popularProducts.length > 0 && (
             <SimilarProductsCarousel
               title="Más opciones similares"
-              products={similarProducts}
+              products={popularProducts}
               onProductSelect={() => onOpenChange(false)}
             />
-          </>
-        )}
+          )}
+        </div>
         
         <DialogFooter className="gap-2 sm:gap-0 mt-4">
           <Button 

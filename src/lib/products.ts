@@ -69,6 +69,79 @@ export const products: Product[] = [
     category: "Security",
     stock: 12,
     featured: false
+  },
+  // Auto parts mock data
+  {
+    id: 7,
+    name: "High Performance Brake Pads",
+    description: "Premium ceramic brake pads for superior stopping power and reduced brake dust. Compatible with most modern vehicles.",
+    price: 89.99,
+    oldPrice: 119.99,
+    discount: 25,
+    image: "https://images.unsplash.com/photo-1582038279036-3d95a6f89ec9?q=80&w=1000&auto=format&fit=crop",
+    category: "Brakes",
+    stock: 20,
+    featured: true
+  },
+  {
+    id: 8,
+    name: "LED Headlight Conversion Kit",
+    description: "Upgrade your vehicle with our LED headlight conversion kit for brighter illumination and better nighttime visibility.",
+    price: 129.99,
+    oldPrice: 159.99,
+    discount: 19,
+    image: "https://images.unsplash.com/photo-1600661653561-629509216228?q=80&w=1000&auto=format&fit=crop",
+    category: "Lighting",
+    stock: 15,
+    featured: true
+  },
+  {
+    id: 9,
+    name: "Premium Oil Filter",
+    description: "High-quality oil filter designed to remove contaminants and extend engine life. Compatible with most vehicles.",
+    price: 12.99,
+    oldPrice: 16.99,
+    discount: 24,
+    image: "https://images.unsplash.com/photo-1636901942318-972ea62b4d5d?q=80&w=1000&auto=format&fit=crop",
+    category: "Engine",
+    stock: 50,
+    featured: false
+  },
+  {
+    id: 10,
+    name: "Performance Air Intake System",
+    description: "Increase horsepower and torque with our performance air intake system. Designed for easy installation.",
+    price: 199.99,
+    oldPrice: 249.99,
+    discount: 20,
+    image: "https://images.unsplash.com/photo-1659175323873-f8ad605cbf84?q=80&w=1000&auto=format&fit=crop",
+    category: "Engine",
+    stock: 8,
+    featured: true
+  },
+  {
+    id: 11,
+    name: "Car Audio System",
+    description: "Complete car audio system with subwoofer, amplifier, and speakers for an immersive sound experience.",
+    price: 349.99,
+    oldPrice: 449.99,
+    discount: 22,
+    image: "https://images.unsplash.com/photo-1547949003-9792a18a2601?q=80&w=1000&auto=format&fit=crop",
+    category: "Audio",
+    stock: 6,
+    featured: true
+  },
+  {
+    id: 12,
+    name: "All-Weather Floor Mats",
+    description: "Protect your vehicle's interior with our durable all-weather floor mats. Custom fit for your specific make and model.",
+    price: 79.99,
+    oldPrice: 99.99,
+    discount: 20,
+    image: "https://images.unsplash.com/photo-1537019575197-56dc5197fe87?q=80&w=1000&auto=format&fit=crop",
+    category: "Interior",
+    stock: 30,
+    featured: false
   }
 ];
 
