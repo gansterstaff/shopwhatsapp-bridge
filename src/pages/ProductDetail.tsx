@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useProductById } from '@/hooks/useProducts';
+import { useProductById, useProducts } from '@/hooks/useProducts';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -16,7 +17,8 @@ import {
   MinusCircle,
   PlusCircle,
   Star,
-  Percent
+  Percent,
+  Info
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -26,12 +28,20 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import ProductCard from '@/components/ProductCard';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const productId = id ? parseInt(id) : 0;
   const { data: product, isLoading, error } = useProductById(productId);
+  const { data: allProducts } = useProducts();
   const { addItem } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
@@ -47,6 +57,13 @@ const ProductDetail = () => {
   const handleQuantityChange = (amount: number) => {
     setQuantity(prev => Math.max(1, prev + amount));
   };
+
+  // Find related products (same category, excluding current product)
+  const relatedProducts = allProducts 
+    ? allProducts
+        .filter(p => p.category === product?.category && p.id !== product?.id)
+        .slice(0, 4) // Limit to 4 related products
+    : [];
 
   if (isLoading) {
     return (
@@ -180,6 +197,29 @@ const ProductDetail = () => {
 
           <p className="text-gray-700">{product.description}</p>
 
+          {/* Product Specifications */}
+          <div className="border border-gray-200 rounded-lg p-4">
+            <h3 className="font-medium mb-2">Especificaciones principales</h3>
+            <ul className="space-y-2">
+              <li className="flex items-start">
+                <div className="h-1.5 w-1.5 rounded-full bg-primary mt-1.5 mr-2"></div>
+                <span>Marca: {product.name.split(' ')[0]}</span>
+              </li>
+              <li className="flex items-start">
+                <div className="h-1.5 w-1.5 rounded-full bg-primary mt-1.5 mr-2"></div>
+                <span>Garantía: 12 meses</span>
+              </li>
+              <li className="flex items-start">
+                <div className="h-1.5 w-1.5 rounded-full bg-primary mt-1.5 mr-2"></div>
+                <span>Condición: Nuevo</span>
+              </li>
+              <li className="flex items-start">
+                <div className="h-1.5 w-1.5 rounded-full bg-primary mt-1.5 mr-2"></div>
+                <span>Origen: Importado</span>
+              </li>
+            </ul>
+          </div>
+
           <div className="flex items-center space-x-4">
             <div className="flex items-center">
               <Button 
@@ -264,6 +304,102 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Satisfaction Guarantee Section */}
+      <div className="mt-16 border border-gray-200 rounded-lg p-6">
+        <div className="flex items-start">
+          <RefreshCw className="h-6 w-6 text-primary mr-3 flex-shrink-0 mt-1" />
+          <div>
+            <h2 className="text-xl font-bold mb-4">Devolver es fácil y gratis</h2>
+            <h3 className="text-lg font-semibold mb-2">Satisfacción garantizada</h3>
+            <p className="mb-4">La mayoría de los productos tienen 30 días desde que los recibes para hacer una devolución.</p>
+            
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="plazos">
+                <AccordionTrigger className="text-base font-medium">Plazos para devolución y cambio de autopartes</AccordionTrigger>
+                <AccordionContent>
+                  <ul className="space-y-2 text-gray-700">
+                    <li className="flex items-start">
+                      <div className="h-1.5 w-1.5 rounded-full bg-gray-500 mt-2 mr-2"></div>
+                      <span>7 días: electrónica automotriz, radios, sistemas GPS y alarmas.</span>
+                    </li>
+                    <li className="flex items-start">
+                      <div className="h-1.5 w-1.5 rounded-full bg-gray-500 mt-2 mr-2"></div>
+                      <span>15 días: partes mecánicas y de carrocería en su empaque original.</span>
+                    </li>
+                    <li className="flex items-start">
+                      <div className="h-1.5 w-1.5 rounded-full bg-gray-500 mt-2 mr-2"></div>
+                      <span>30 días: accesorios diversos para vehículos sin usar.</span>
+                    </li>
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+              
+              <AccordionItem value="requisitos">
+                <AccordionTrigger className="text-base font-medium">Requisitos para devoluciones</AccordionTrigger>
+                <AccordionContent>
+                  <p className="mb-2 font-medium">Deben estar cerrados, con todos sus sellos y etiquetas:</p>
+                  <ul className="space-y-2 text-gray-700">
+                    <li className="flex items-start">
+                      <div className="h-1.5 w-1.5 rounded-full bg-gray-500 mt-2 mr-2"></div>
+                      <span>Componentes electrónicos para vehículos.</span>
+                    </li>
+                    <li className="flex items-start">
+                      <div className="h-1.5 w-1.5 rounded-full bg-gray-500 mt-2 mr-2"></div>
+                      <span>Sistemas de audio y navegación.</span>
+                    </li>
+                    <li className="flex items-start">
+                      <div className="h-1.5 w-1.5 rounded-full bg-gray-500 mt-2 mr-2"></div>
+                      <span>Productos de limpieza y mantenimiento para vehículos.</span>
+                    </li>
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+              
+              <AccordionItem value="excepciones">
+                <AccordionTrigger className="text-base font-medium">Productos sin devolución</AccordionTrigger>
+                <AccordionContent>
+                  <p className="mb-2 font-medium">No tienen devolución o cambio si te arrepientes de la compra:</p>
+                  <ul className="space-y-2 text-gray-700">
+                    <li className="flex items-start">
+                      <div className="h-1.5 w-1.5 rounded-full bg-gray-500 mt-2 mr-2"></div>
+                      <span>Productos de compra internacional.</span>
+                    </li>
+                    <li className="flex items-start">
+                      <div className="h-1.5 w-1.5 rounded-full bg-gray-500 mt-2 mr-2"></div>
+                      <span>Partes personalizadas o hechas a medida.</span>
+                    </li>
+                    <li className="flex items-start">
+                      <div className="h-1.5 w-1.5 rounded-full bg-gray-500 mt-2 mr-2"></div>
+                      <span>Baterías de auto abiertas o usadas.</span>
+                    </li>
+                    <li className="flex items-start">
+                      <div className="h-1.5 w-1.5 rounded-full bg-gray-500 mt-2 mr-2"></div>
+                      <span>Productos que hayan sido previamente instalados.</span>
+                    </li>
+                    <li className="flex items-start">
+                      <div className="h-1.5 w-1.5 rounded-full bg-gray-500 mt-2 mr-2"></div>
+                      <span>Fluidos, aceites y lubricantes abiertos.</span>
+                    </li>
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
+        </div>
+      </div>
+      
+      {/* Related Products Section */}
+      {relatedProducts.length > 0 && (
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold mb-6">Productos relacionados</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {relatedProducts.map(relatedProduct => (
+              <ProductCard key={relatedProduct.id} product={relatedProduct} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

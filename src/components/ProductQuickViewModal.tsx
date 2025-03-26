@@ -14,11 +14,18 @@ import {
   PlusCircle, 
   Percent, 
   Star,
+  RefreshCw
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Product } from '@/lib/types';
 import { useCart } from '@/contexts/CartContext';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface ProductQuickViewModalProps {
   product: Product;
@@ -34,6 +41,7 @@ const ProductQuickViewModal: React.FC<ProductQuickViewModalProps> = ({
   const { addItem } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
+  const [showReturnInfo, setShowReturnInfo] = useState(false);
 
   const handleQuantityChange = (amount: number) => {
     setQuantity(prev => Math.max(1, Math.min(product.stock, prev + amount)));
@@ -101,6 +109,17 @@ const ProductQuickViewModal: React.FC<ProductQuickViewModalProps> = ({
             </div>
             
             <p className="text-sm text-gray-600 my-2 line-clamp-3">{product.description}</p>
+            
+            {/* Product Specifications */}
+            <div className="border border-gray-100 rounded bg-gray-50 p-3 my-2">
+              <h4 className="text-sm font-medium mb-1">Especificaciones:</h4>
+              <ul className="text-xs space-y-1 text-gray-600">
+                <li>• Marca: {product.name.split(' ')[0]}</li>
+                <li>• Garantía: 12 meses</li>
+                <li>• Condición: Nuevo</li>
+                <li>• Stock: {product.stock} unidades</li>
+              </ul>
+            </div>
             
             <div className="flex items-center my-2">
               <span className="text-sm mr-3">Cantidad:</span>
@@ -176,6 +195,30 @@ const ProductQuickViewModal: React.FC<ProductQuickViewModalProps> = ({
           </div>
         </div>
         
+        {/* Return Policy */}
+        <div className="my-4 border rounded-lg p-3">
+          <button
+            onClick={() => setShowReturnInfo(!showReturnInfo)}
+            className="flex items-center text-sm font-medium text-primary hover:underline w-full"
+          >
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Devolver es fácil y gratis - Conoce nuestra Satisfacción garantizada
+          </button>
+          
+          {showReturnInfo && (
+            <div className="mt-3 text-sm">
+              <p className="mb-2">La mayoría de las autopartes tienen 30 días desde que las recibes para hacer una devolución.</p>
+              <p className="mb-2 text-xs text-gray-600">Sin embargo, algunas categorías cuentan con plazos diferentes:</p>
+              <ul className="text-xs text-gray-600 space-y-1 list-disc pl-4 mb-2">
+                <li>7 días: electrónica automotriz, radios y sistemas GPS.</li>
+                <li>15 días: partes mecánicas en empaque original.</li>
+                <li>Sin devolución: baterías usadas, fluidos abiertos, partes instaladas.</li>
+              </ul>
+              <p className="text-xs text-gray-500 italic">Consulta nuestra política completa para más detalles.</p>
+            </div>
+          )}
+        </div>
+        
         <DialogFooter className="gap-2 sm:gap-0 mt-4">
           <Button 
             variant="outline"
@@ -213,4 +256,3 @@ const ProductQuickViewModal: React.FC<ProductQuickViewModalProps> = ({
 };
 
 export default ProductQuickViewModal;
-
