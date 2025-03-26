@@ -47,7 +47,7 @@ const ProductQuickViewModal: React.FC<ProductQuickViewModalProps> = ({
 
   // Generate WhatsApp link
   const generateWhatsAppLink = (product: Product) => {
-    const message = `Hola, estoy interesado en comprar ${quantity} unidad(es) del producto: *${product.name}* por $${product.price * quantity}. ¿Podría darme más información?`;
+    const message = `Hola, estoy interesado en comprar ${quantity} unidad(es) del producto: *${product.name}* por $${(product.price * quantity).toFixed(2)}. ¿Podría darme más información?`;
     return `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
   };
 
@@ -55,7 +55,7 @@ const ProductQuickViewModal: React.FC<ProductQuickViewModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-xl">Producto agregado a tu Carrito</DialogTitle>
+          <DialogTitle className="text-xl">Detalles del Producto</DialogTitle>
         </DialogHeader>
         
         <div className="grid md:grid-cols-2 gap-4 my-4">
@@ -160,7 +160,7 @@ const ProductQuickViewModal: React.FC<ProductQuickViewModalProps> = ({
               />
               <label htmlFor="warranty-2" className="flex-1 text-sm">Garantía de 2 años: Reemplazo</label>
               <span className="text-sm font-medium">S/ 192</span>
-              <Badge variant="warning" className="ml-2 bg-amber-500">Recomendado</Badge>
+              <Badge variant="secondary" className="ml-2">Recomendado</Badge>
             </div>
             
             <div className="flex items-center border rounded-md p-2">
@@ -176,28 +176,6 @@ const ProductQuickViewModal: React.FC<ProductQuickViewModalProps> = ({
           </div>
         </div>
         
-        <div className="bg-gray-50 p-3 rounded-lg">
-          <h4 className="font-medium mb-2">Beneficios De Extender La Garantía</h4>
-          <ul className="space-y-1">
-            <li className="flex items-start">
-              <Check className="h-4 w-4 text-green-500 mt-0.5 mr-2 flex-shrink-0" />
-              <span className="text-sm">Devolución de GEX por robo durante la Garantía Original</span>
-            </li>
-            <li className="flex items-start">
-              <Check className="h-4 w-4 text-green-500 mt-0.5 mr-2 flex-shrink-0" />
-              <span className="text-sm">Trabajo realizado por expertos certificados</span>
-            </li>
-            <li className="flex items-start">
-              <Check className="h-4 w-4 text-green-500 mt-0.5 mr-2 flex-shrink-0" />
-              <span className="text-sm">Cobertura en caso de variación de voltaje</span>
-            </li>
-            <li className="flex items-start">
-              <Check className="h-4 w-4 text-green-500 mt-0.5 mr-2 flex-shrink-0" />
-              <span className="text-sm">Transferencia de titularidad sin cargo adicional</span>
-            </li>
-          </ul>
-        </div>
-        
         <DialogFooter className="gap-2 sm:gap-0 mt-4">
           <Button 
             variant="outline"
@@ -207,7 +185,6 @@ const ProductQuickViewModal: React.FC<ProductQuickViewModalProps> = ({
           </Button>
           
           <Button 
-            className="flex-1 sm:flex-none"
             onClick={handleAddToCart}
             disabled={isAddedToCart}
           >
@@ -236,3 +213,4 @@ const ProductQuickViewModal: React.FC<ProductQuickViewModalProps> = ({
 };
 
 export default ProductQuickViewModal;
+
