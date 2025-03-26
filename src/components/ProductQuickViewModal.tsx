@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Dialog, 
   DialogContent, 
@@ -14,7 +14,9 @@ import {
   PlusCircle, 
   Percent, 
   Star,
-  RefreshCw
+  RefreshCw,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -26,6 +28,15 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useProducts } from '@/hooks/useProducts';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { Link } from 'react-router-dom';
 
 interface ProductQuickViewModalProps {
   product: Product;
@@ -42,6 +53,18 @@ const ProductQuickViewModal: React.FC<ProductQuickViewModalProps> = ({
   const [quantity, setQuantity] = useState(1);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
   const [showReturnInfo, setShowReturnInfo] = useState(false);
+  const { data: allProducts, isLoading } = useProducts();
+  const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    if (allProducts && product) {
+      // Filter for similar products (same category, excluding current product)
+      const filtered = allProducts.filter(p => 
+        p.category === product.category && p.id !== product.id
+      ).slice(0, 6); // Limit to 6 similar products
+      setSimilarProducts(filtered);
+    }
+  }, [allProducts, product]);
 
   const handleQuantityChange = (amount: number) => {
     setQuantity(prev => Math.max(1, Math.min(product.stock, prev + amount)));
@@ -59,9 +82,20 @@ const ProductQuickViewModal: React.FC<ProductQuickViewModalProps> = ({
     return `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
   };
 
+  // Format price with currency
+  const formatPrice = (price: number) => {
+    return `S/ ${price.toFixed(2)}`;
+  };
+
+  // Calculate discount percentage
+  const calculateDiscountPercentage = (oldPrice: number, currentPrice: number) => {
+    if (!oldPrice || oldPrice <= currentPrice) return null;
+    return Math.round(((oldPrice - currentPrice) / oldPrice) * 100);
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl">Detalles del Producto</DialogTitle>
         </DialogHeader>
@@ -217,6 +251,125 @@ const ProductQuickViewModal: React.FC<ProductQuickViewModalProps> = ({
               <p className="text-xs text-gray-500 italic">Consulta nuestra política completa para más detalles.</p>
             </div>
           )}
+        </div>
+        
+        {/* Similar Products Section */}
+        {similarProducts.length > 0 && (
+          <div className="mt-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-base font-medium">Varias personas después miran</h3>
+            </div>
+            <div className="relative">
+              <Carousel className="w-full">
+                <CarouselContent className="-ml-2 md:-ml-4">
+                  {similarProducts.map((item) => (
+                    <CarouselItem key={item.id} className="pl-2 md:pl-4 sm:basis-1/2 md:basis-1/3">
+                      <Link 
+                        to={`/product/${item.id}`}
+                        onClick={() => onOpenChange(false)}
+                        className="block border rounded-lg p-3 h-full hover:shadow-md transition-shadow"
+                      >
+                        <div className="aspect-square mb-2 relative overflow-hidden bg-gray-50 rounded flex items-center justify-center p-2">
+                          <img 
+                            src={item.image} 
+                            alt={item.name} 
+                            className="object-contain h-full w-full"
+                          />
+                          {item.discount && (
+                            <Badge variant="destructive" className="absolute top-1 right-1 text-xs">
+                              -{item.discount}%
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="text-center">
+                          <p className="text-xs text-gray-500 uppercase mb-1 truncate">{item.name.split(' ')[0]}</p>
+                          <h4 className="text-sm font-medium mb-1 line-clamp-2 h-10">{item.name}</h4>
+                          <div className="flex items-center justify-center text-yellow-400 mb-1">
+                            <Star className="h-3 w-3 fill-current" />
+                            <Star className="h-3 w-3 fill-current" />
+                            <Star className="h-3 w-3 fill-current" />
+                            <Star className="h-3 w-3 fill-current" />
+                            <Star className="h-3 w-3 fill-current" />
+                            <span className="text-xs text-gray-500 ml-1">(12)</span>
+                          </div>
+                          <div className="flex flex-col items-center">
+                            <div className="flex items-center gap-1">
+                              <span className="font-semibold text-sm">{formatPrice(item.price)}</span>
+                              {item.oldPrice && (
+                                <span className="text-gray-500 text-xs line-through">
+                                  {formatPrice(item.oldPrice)}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="absolute -left-4 top-1/3 transform -translate-y-1/2" />
+                <CarouselNext className="absolute -right-4 top-1/3 transform -translate-y-1/2" />
+              </Carousel>
+            </div>
+          </div>
+        )}
+        
+        <div className="mt-4">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-base font-medium">Más opciones similares</h3>
+          </div>
+          <div className="relative">
+            <Carousel className="w-full">
+              <CarouselContent className="-ml-2 md:-ml-4">
+                {similarProducts.map((item) => (
+                  <CarouselItem key={`alt-${item.id}`} className="pl-2 md:pl-4 sm:basis-1/2 md:basis-1/3">
+                    <Link 
+                      to={`/product/${item.id}`}
+                      onClick={() => onOpenChange(false)}
+                      className="block border rounded-lg p-3 h-full hover:shadow-md transition-shadow"
+                    >
+                      <div className="aspect-square mb-2 relative overflow-hidden bg-gray-50 rounded flex items-center justify-center p-2">
+                        <img 
+                          src={item.image} 
+                          alt={item.name} 
+                          className="object-contain h-full w-full"
+                        />
+                        {calculateDiscountPercentage(item.oldPrice || 0, item.price) && (
+                          <Badge variant="destructive" className="absolute top-1 right-1 text-xs">
+                            -{calculateDiscountPercentage(item.oldPrice || 0, item.price)}%
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="text-center">
+                        <p className="text-xs text-gray-500 uppercase mb-1 truncate">{item.name.split(' ')[0]}</p>
+                        <h4 className="text-sm font-medium mb-1 line-clamp-2 h-10">{item.name}</h4>
+                        <div className="flex items-center justify-center text-yellow-400 mb-1">
+                          <Star className="h-3 w-3 fill-current" />
+                          <Star className="h-3 w-3 fill-current" />
+                          <Star className="h-3 w-3 fill-current" />
+                          <Star className="h-3 w-3 fill-current" />
+                          <Star className="h-3 w-3 fill-current" />
+                          <span className="text-xs text-gray-500 ml-1">(5)</span>
+                        </div>
+                        <div className="flex flex-col items-center">
+                          <div className="flex items-center gap-1">
+                            <span className="font-semibold text-sm">{formatPrice(item.price)}</span>
+                            {item.oldPrice && (
+                              <span className="text-gray-500 text-xs line-through">
+                                {formatPrice(item.oldPrice)}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="absolute -left-4 top-1/3 transform -translate-y-1/2" />
+              <CarouselNext className="absolute -right-4 top-1/3 transform -translate-y-1/2" />
+            </Carousel>
+          </div>
         </div>
         
         <DialogFooter className="gap-2 sm:gap-0 mt-4">
