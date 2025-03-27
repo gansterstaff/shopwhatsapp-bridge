@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useProductById, useProducts } from '@/hooks/useProducts';
@@ -36,6 +35,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Helmet } from 'react-helmet';
+import ProductImageGallery from '@/components/product/ProductImageGallery';
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -47,7 +47,6 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
 
-  // Extraer la categoría en español para SEO
   const getCategoryInSpanish = (category: string) => {
     const categories: Record<string, string> = {
       'electronics': 'Electrónica',
@@ -72,11 +71,10 @@ const ProductDetail = () => {
     setQuantity(prev => Math.max(1, prev + amount));
   };
 
-  // Encontrar productos relacionados (misma categoría, excluyendo el producto actual)
   const relatedProducts = allProducts 
     ? allProducts
         .filter(p => p.category === product?.category && p.id !== product?.id)
-        .slice(0, 4) // Limitamos a 4 productos relacionados
+        .slice(0, 4)
     : [];
 
   if (isLoading) {
@@ -132,7 +130,6 @@ const ProductDetail = () => {
       </Helmet>
       
       <div className="container mx-auto px-4 py-24">
-        {/* Breadcrumbs */}
         <Breadcrumb className="mb-6">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -165,20 +162,17 @@ const ProductDetail = () => {
         </Button>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Imagen del producto con galería */}
           <ProductImageGallery
             image={product.image}
             name={product.name}
             discount={product.discount}
             additionalImages={[
-              // Estas serían imágenes adicionales reales en una implementación completa
               product.image ? `${product.image}?variant=1` : '',
               product.image ? `${product.image}?variant=2` : '',
               product.image ? `${product.image}?variant=3` : ''
             ]}
           />
 
-          {/* Información del producto */}
           <div className="space-y-6">
             <div>
               <div className="flex items-center gap-2 mb-2">
@@ -223,7 +217,6 @@ const ProductDetail = () => {
 
             <p className="text-gray-700">{product.description}</p>
 
-            {/* Especificaciones del producto */}
             <div className="border border-gray-200 rounded-lg p-4">
               <h3 className="font-medium mb-2">Especificaciones principales</h3>
               <ul className="space-y-2">
@@ -341,7 +334,6 @@ const ProductDetail = () => {
           </div>
         </div>
 
-        {/* Sección de Garantía de Satisfacción */}
         <div className="mt-16 border border-gray-200 rounded-lg p-6">
           <div className="flex items-start">
             <RefreshCw className="h-6 w-6 text-primary mr-3 flex-shrink-0 mt-1" />
@@ -425,7 +417,6 @@ const ProductDetail = () => {
           </div>
         </div>
         
-        {/* Sección de Productos Relacionados */}
         {relatedProducts.length > 0 && (
           <div className="mt-16">
             <h2 className="text-2xl font-bold mb-6">Productos relacionados</h2>
