@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -25,7 +24,7 @@ import {
 } from "@/components/ui/pagination";
 import { Helmet } from 'react-helmet';
 import { useToast } from '@/hooks/use-toast';
-import { Format, Package, Filter, Search, Calendar, MoreHorizontal, Eye, ClipboardList } from 'lucide-react';
+import { Package, UserRound, Filter, Search, Calendar, MoreHorizontal, Eye, ClipboardList } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -100,7 +99,6 @@ const OrdersManagement = () => {
 
   const fetchOrders = async () => {
     try {
-      // Construir la consulta base
       let query = supabase
         .from('orders')
         .select(`
@@ -109,12 +107,10 @@ const OrdersManagement = () => {
         `)
         .order('created_at', { ascending: false });
         
-      // Aplicar filtro de estado si es necesario
       if (statusFilter !== 'all') {
         query = query.eq('status', statusFilter);
       }
       
-      // Aplicar paginación
       const from = (currentPage - 1) * ITEMS_PER_PAGE;
       const to = from + ITEMS_PER_PAGE - 1;
       
@@ -124,7 +120,6 @@ const OrdersManagement = () => {
 
       if (error) throw error;
       
-      // Calcular total de páginas
       if (count !== null) {
         setTotalPages(Math.ceil(count / ITEMS_PER_PAGE));
       }
@@ -142,7 +137,6 @@ const OrdersManagement = () => {
 
   const fetchOrderDetail = async (orderId: string) => {
     try {
-      // Obtener detalles del pedido
       const { data: orderData, error: orderError } = await supabase
         .from('orders')
         .select(`
@@ -154,7 +148,6 @@ const OrdersManagement = () => {
         
       if (orderError) throw orderError;
       
-      // Obtener items del pedido con información del producto
       const { data: itemsData, error: itemsError } = await supabase
         .from('order_items')
         .select(`
@@ -389,7 +382,6 @@ const OrdersManagement = () => {
           </Pagination>
         )}
 
-        {/* Dialog para ver detalles del pedido */}
         <Dialog open={isDetailDialogOpen} onOpenChange={setIsDetailDialogOpen}>
           <DialogContent className="sm:max-w-[700px]">
             <DialogHeader>
@@ -478,7 +470,6 @@ const OrdersManagement = () => {
           </DialogContent>
         </Dialog>
 
-        {/* Dialog para cambiar estado */}
         <Dialog open={isUpdateStatusDialogOpen} onOpenChange={setIsUpdateStatusDialogOpen}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
