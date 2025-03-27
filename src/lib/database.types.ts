@@ -57,21 +57,21 @@ export interface Database {
           created_at: string
           email: string
           name?: string
-          role: 'owner' | 'admin' | 'customer'
+          role: 'customer' | 'admin'
         }
         Insert: {
           id: string
           created_at?: string
           email: string
           name?: string
-          role?: 'owner' | 'admin' | 'customer'
+          role?: 'customer' | 'admin'
         }
         Update: {
           id?: string
           created_at?: string
           email?: string
           name?: string
-          role?: 'owner' | 'admin' | 'customer'
+          role?: 'customer' | 'admin'
         }
       }
       orders: {
@@ -120,44 +120,15 @@ export interface Database {
           price?: number
         }
       }
-      admin_permissions: {
-        Row: {
-          id: string
-          owner_id: string
-          admin_id: string
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          owner_id: string
-          admin_id: string
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          owner_id?: string
-          admin_id?: string
-          created_at?: string
-        }
-      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      is_assigned_admin: {
-        Args: {
-          user_id: string
-        }
-        Returns: boolean
-      }
-      has_admin_access: {
-        Args: Record<string, never>
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
-      user_role: 'owner' | 'admin' | 'customer'
+      [_ in never]: never
     }
   }
 }
