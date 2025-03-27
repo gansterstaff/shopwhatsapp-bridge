@@ -16,7 +16,7 @@ export interface User {
   id: string;
   email: string;
   name?: string;
-  role: 'customer' | 'admin';
+  role: 'owner' | 'admin' | 'customer';
 }
 
 export interface CartItem {
@@ -38,4 +38,11 @@ export interface OrderItem {
   productId: number;
   quantity: number;
   price: number;
+}
+
+export interface AdminPermission {
+  id: string;
+  ownerId: string;
+  adminId: string;
+  createdAt: string;
 }
