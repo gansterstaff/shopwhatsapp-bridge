@@ -24,10 +24,12 @@ import {
   SheetFooter,
   SheetClose
 } from "@/components/ui/sheet";
+import SearchModal from './SearchModal';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { user, signOut } = useAuth();
   const { items, total, removeItem } = useCart();
   const navigate = useNavigate();
@@ -52,6 +54,10 @@ const Header: React.FC = () => {
       .map(part => part[0])
       .join('')
       .toUpperCase();
+  };
+
+  const openSearch = () => {
+    setIsSearchOpen(true);
   };
   
   return (
@@ -89,7 +95,10 @@ const Header: React.FC = () => {
           
           {/* Right side icons */}
           <div className="flex items-center space-x-4">
-            <button className="p-2 hover:bg-secondary rounded-full transition-colors">
+            <button 
+              className="p-2 hover:bg-secondary rounded-full transition-colors"
+              onClick={openSearch}
+            >
               <Search className="h-5 w-5" />
             </button>
 
@@ -297,6 +306,9 @@ const Header: React.FC = () => {
           )}
         </nav>
       </div>
+
+      {/* Search Modal */}
+      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </header>
   );
 };

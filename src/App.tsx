@@ -13,6 +13,9 @@ import AuthCallback from "./pages/AuthCallback";
 import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
+import Contact from "./pages/Contact";
+import About from "./pages/About";
+import Orders from "./pages/Orders";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { AuthProvider } from "@/contexts/AuthContext";
@@ -37,6 +40,9 @@ const App = () => (
                   <Route path="/products" element={<Products />} />
                   <Route path="/product/:id" element={<ProductDetail />} />
                   <Route path="/cart" element={<Cart />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/orders" element={<Orders />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
