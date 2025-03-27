@@ -20,6 +20,13 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { AuthProvider } from "@/contexts/AuthContext";
 
+// Admin Components
+import AdminLayout from "./components/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/Dashboard";
+import ProductsManagement from "./pages/admin/Products";
+import OrdersManagement from "./pages/admin/Orders";
+import UsersManagement from "./pages/admin/Users";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -30,25 +37,44 @@ const App = () => (
           <CartProvider>
             <Toaster />
             <Sonner />
-            <div className="flex flex-col min-h-screen">
-              <Header />
-              <main className="flex-grow">
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/auth/callback" element={<AuthCallback />} />
-                  <Route path="/products" element={<Products />} />
-                  <Route path="/product/:id" element={<ProductDetail />} />
-                  <Route path="/cart" element={<Cart />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/orders" element={<Orders />} />
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </main>
-              <Footer />
-            </div>
+            <Routes>
+              {/* Admin Routes */}
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<AdminDashboard />} />
+                <Route path="products" element={<ProductsManagement />} />
+                <Route path="orders" element={<OrdersManagement />} />
+                <Route path="users" element={<UsersManagement />} />
+                {/* Placeholder routes for future implementation */}
+                <Route path="reports" element={<AdminDashboard />} />
+                <Route path="settings" element={<AdminDashboard />} />
+              </Route>
+              
+              {/* Client Routes */}
+              <Route
+                path="/*"
+                element={
+                  <div className="flex flex-col min-h-screen">
+                    <Header />
+                    <main className="flex-grow">
+                      <Routes>
+                        <Route path="/" element={<Index />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/auth/callback" element={<AuthCallback />} />
+                        <Route path="/products" element={<Products />} />
+                        <Route path="/product/:id" element={<ProductDetail />} />
+                        <Route path="/cart" element={<Cart />} />
+                        <Route path="/contact" element={<Contact />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/orders" element={<Orders />} />
+                        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </main>
+                    <Footer />
+                  </div>
+                }
+              />
+            </Routes>
           </CartProvider>
         </AuthProvider>
       </BrowserRouter>
