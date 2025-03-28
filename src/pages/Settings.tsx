@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -8,21 +7,19 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { WhatsappIcon } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 
 const Settings = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Redireccionar si no hay usuario autenticado
   useEffect(() => {
     if (!loading && !user) {
       navigate('/login');
     }
   }, [user, loading, navigate]);
 
-  // Simulación de guardado de configuración
   const handleSaveSettings = () => {
     toast({
       title: "Configuración guardada",
@@ -39,7 +36,7 @@ const Settings = () => {
   }
 
   if (!user) {
-    return null; // No renderizar nada si no hay usuario (redirección se maneja en useEffect)
+    return null;
   }
 
   return (
@@ -47,7 +44,6 @@ const Settings = () => {
       <h1 className="text-3xl font-bold mb-8">Configuración</h1>
       
       <div className="grid gap-8">
-        {/* Configuración de cuenta */}
         <Card>
           <CardHeader>
             <CardTitle>Configuración de cuenta</CardTitle>
@@ -56,7 +52,6 @@ const Settings = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Notificaciones por WhatsApp */}
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Comunicación por WhatsApp</h3>
               
@@ -91,7 +86,6 @@ const Settings = () => {
               </div>
             </div>
             
-            {/* Preferencias de contacto */}
             <div className="pt-4">
               <h3 className="text-lg font-medium mb-4">Método de contacto preferido</h3>
               <div className="flex flex-col md:flex-row md:items-center gap-4">
@@ -103,7 +97,7 @@ const Settings = () => {
                   <SelectContent>
                     <SelectItem value="wssp">
                       <div className="flex items-center">
-                        <WhatsappIcon className="mr-2 h-4 w-4" />
+                        <MessageSquare className="mr-2 h-4 w-4" />
                         WhatsApp
                       </div>
                     </SelectItem>
@@ -116,7 +110,6 @@ const Settings = () => {
           </CardContent>
         </Card>
         
-        {/* Preferencias de compra */}
         <Card>
           <CardHeader>
             <CardTitle>Preferencias de compra</CardTitle>
