@@ -1,27 +1,41 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const PromotionalBanner: React.FC = () => {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Verificar en localStorage si el banner ya fue cerrado
+  useEffect(() => {
+    const bannerClosed = localStorage.getItem('promotionalBannerClosed');
+    if (!bannerClosed) {
+      setIsVisible(true);
+    }
+  }, []);
+
+  const closeBanner = () => {
+    setIsVisible(false);
+    // Guardar en localStorage que el banner fue cerrado
+    localStorage.setItem('promotionalBannerClosed', 'true');
+  };
 
   if (!isVisible) return null;
 
   return (
-    <div className="bg-primary py-2 px-4 text-primary-foreground relative z-40">
-      <div className="container mx-auto flex items-center justify-center">
-        <p className="text-center text-sm md:text-base flex-1">
+    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-auto max-w-md z-50 animate-fade-in">
+      <div className="bg-black text-white rounded-lg shadow-lg px-4 py-2 flex items-center justify-between">
+        <p className="text-xs sm:text-sm">
           <span className="font-bold">¡Oferta especial!</span>{' '}
-          Usa el código <span className="font-bold">WELCOME20</span> para obtener un 20% de descuento en tu primera compra
+          Usa el código <span className="font-bold">WELCOME20</span> para obtener un 20% de descuento
         </p>
         <Button 
           variant="ghost" 
           size="icon"
-          className="text-primary-foreground hover:bg-primary/90"
-          onClick={() => setIsVisible(false)}
+          className="text-white hover:bg-white/10 h-6 w-6 ml-2"
+          onClick={closeBanner}
         >
-          <X className="h-4 w-4" />
+          <X className="h-3 w-3" />
           <span className="sr-only">Cerrar</span>
         </Button>
       </div>

@@ -26,7 +26,6 @@ import {
 import SearchModal from './SearchModal';
 import NotificationsPopover from './NotificationsPopover';
 import FavoritesPopover from './FavoritesPopover';
-import PromotionalBanner from './PromotionalBanner';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -64,13 +63,11 @@ const Header: React.FC = () => {
   
   return (
     <>
-      <PromotionalBanner />
       <header 
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 py-4",
           isScrolled ? "bg-white/80 backdrop-blur-md shadow-sm" : "bg-transparent"
         )}
-        style={{ top: isScrolled ? '0' : 'auto' }}
       >
         <div className="container mx-auto">
           <div className="flex items-center justify-between">
