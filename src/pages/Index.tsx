@@ -8,6 +8,7 @@ import Newsletter from '@/components/Newsletter';
 import Categories from '@/components/Categories';
 import WhyChooseUs from '@/components/WhyChooseUs';
 import PromotionalBanner from '@/components/PromotionalBanner';
+import AboutCarousel from '@/components/AboutCarousel';
 
 const Index: React.FC = () => {
   // Add a smooth scroll effect when page loads
@@ -24,6 +25,7 @@ const Index: React.FC = () => {
         <Hero />
         <Categories />
         <FeaturedProducts />
+        <AboutCarousel />
         <WhyChooseUs />
         <Benefits />
         <Testimonials />

@@ -6,7 +6,7 @@ const Logo: React.FC = () => {
   return (
     <Link 
       to="/" 
-      className="font-heading text-2xl font-semibold tracking-tight"
+      className="font-heading text-2xl font-semibold tracking-tight hover:text-primary transition-colors"
     >
       ShopWhats
     </Link>
