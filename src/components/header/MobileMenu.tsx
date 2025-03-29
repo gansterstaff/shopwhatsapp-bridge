@@ -1,9 +1,8 @@
 
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { cn } from '@/lib/utils';
-import { X } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import { Link } from 'react-router-dom';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Home, ShoppingBag, Info, Phone, MessageSquare } from 'lucide-react';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -11,89 +10,37 @@ interface MobileMenuProps {
 }
 
 const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
-  const { user, signOut } = useAuth();
-  const navigate = useNavigate();
-  
-  const handleSignOut = async () => {
-    await signOut();
-    navigate('/');
-  };
+  const menuItems = [
+    { icon: <Home className="mr-2 h-4 w-4" />, name: 'Home', path: '/' },
+    { icon: <ShoppingBag className="mr-2 h-4 w-4" />, name: 'Products', path: '/products' },
+    { icon: <Info className="mr-2 h-4 w-4" />, name: 'About', path: '/about' },
+    { icon: <MessageSquare className="mr-2 h-4 w-4" />, name: 'Chat', path: '/chat' },
+    { icon: <Phone className="mr-2 h-4 w-4" />, name: 'Contact', path: '/contact' },
+  ];
 
   return (
-    <div 
-      className={cn(
-        "fixed inset-0 bg-background z-40 transition-transform duration-300 ease-in-out transform md:hidden",
-        isOpen ? "translate-x-0" : "translate-x-full"
-      )}
-      style={{ top: '72px' }}
-    >
-      <nav className="flex flex-col p-6 space-y-6">
-        <Link 
-          to="/" 
-          className="text-lg font-medium p-2 hover:bg-secondary rounded-md transition-colors"
-          onClick={onClose}
-        >
-          Home
-        </Link>
-        <Link 
-          to="/products" 
-          className="text-lg font-medium p-2 hover:bg-secondary rounded-md transition-colors"
-          onClick={onClose}
-        >
-          Productos
-        </Link>
-        <Link 
-          to="/about" 
-          className="text-lg font-medium p-2 hover:bg-secondary rounded-md transition-colors"
-          onClick={onClose}
-        >
-          Nosotros
-        </Link>
-        <Link 
-          to="/contact" 
-          className="text-lg font-medium p-2 hover:bg-secondary rounded-md transition-colors"
-          onClick={onClose}
-        >
-          Contacto
-        </Link>
-        
-        {user ? (
-          <>
-            <Link 
-              to="/profile" 
-              className="text-lg font-medium p-2 hover:bg-secondary rounded-md transition-colors"
-              onClick={onClose}
-            >
-              Mi Perfil
-            </Link>
-            <Link 
-              to="/orders" 
-              className="text-lg font-medium p-2 hover:bg-secondary rounded-md transition-colors"
-              onClick={onClose}
-            >
-              Mis Pedidos
-            </Link>
-            <button 
-              onClick={() => {
-                handleSignOut();
-                onClose();
-              }}
-              className="text-lg font-medium p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors text-left"
-            >
-              Cerrar sesión
-            </button>
-          </>
-        ) : (
-          <Link 
-            to="/login" 
-            className="text-lg font-medium p-2 hover:bg-secondary rounded-md transition-colors"
-            onClick={onClose}
-          >
-            Iniciar sesión
-          </Link>
-        )}
-      </nav>
-    </div>
+    <Sheet open={isOpen} onOpenChange={onClose}>
+      <SheetContent side="left" className="w-[300px] sm:w-[400px]">
+        <SheetHeader>
+          <SheetTitle>Menu</SheetTitle>
+        </SheetHeader>
+        <div className="py-4">
+          <nav className="flex flex-col space-y-3">
+            {menuItems.map((item) => (
+              <Link
+                key={item.name}
+                to={item.path}
+                className="flex items-center px-2 py-2 text-sm rounded-md hover:bg-muted"
+                onClick={onClose}
+              >
+                {item.icon}
+                {item.name}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 };
 

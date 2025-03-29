@@ -18,8 +18,10 @@ import About from "./pages/About";
 import Orders from "./pages/Orders";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import Chat from "./pages/Chat";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import ChatButton from "./components/ChatButton";
 import { AuthProvider } from "@/contexts/AuthContext";
 
 // Admin Components
@@ -67,6 +69,7 @@ const App = () => (
                         <Route path="/cart" element={<Cart />} />
                         <Route path="/contact" element={<Contact />} />
                         <Route path="/about" element={<About />} />
+                        <Route path="/chat" element={<Chat />} />
                         <Route path="/orders" element={<Orders />} />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/settings" element={<Settings />} />
@@ -75,6 +78,7 @@ const App = () => (
                       </Routes>
                     </main>
                     <Footer />
+                    <ChatButton />
                   </div>
                 }
               />

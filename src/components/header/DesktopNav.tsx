@@ -3,20 +3,25 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const DesktopNav: React.FC = () => {
+  const navItems = [
+    { name: 'Home', path: '/' },
+    { name: 'Products', path: '/products' },
+    { name: 'About', path: '/about' },
+    { name: 'Chat', path: '/chat' },
+    { name: 'Contact', path: '/contact' },
+  ];
+  
   return (
     <nav className="hidden md:flex items-center space-x-8">
-      <Link to="/" className="nav-link font-medium text-sm">
-        Home
-      </Link>
-      <Link to="/products" className="nav-link font-medium text-sm">
-        Productos
-      </Link>
-      <Link to="/about" className="nav-link font-medium text-sm">
-        Nosotros
-      </Link>
-      <Link to="/contact" className="nav-link font-medium text-sm">
-        Contacto
-      </Link>
+      {navItems.map((item) => (
+        <Link
+          key={item.name}
+          to={item.path}
+          className="text-sm font-medium transition-colors hover:text-primary"
+        >
+          {item.name}
+        </Link>
+      ))}
     </nav>
   );
 };
