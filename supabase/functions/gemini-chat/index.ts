@@ -47,7 +47,8 @@ serve(async (req) => {
     });
 
     // Make the API request to Gemini
-    const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.0-pro:generateContent?key=" + apiKey, {
+    // Using gemini-pro model which is the correct one (previously was gemini-1.0-pro)
+    const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + apiKey, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

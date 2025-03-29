@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { MessageSquare, X } from 'lucide-react';
 import ChatContainer from './chat/ChatContainer';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 
 const ChatButton: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,6 +20,7 @@ const ChatButton: React.FC = () => {
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="sm:max-w-[425px] p-0 h-[600px] max-h-[80vh]">
+          <DialogTitle className="sr-only">Chat Assistant</DialogTitle>
           <ChatContainer />
         </DialogContent>
       </Dialog>
