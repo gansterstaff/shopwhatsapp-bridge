@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 
 const DesktopNav: React.FC = () => {
   const navItems = [
-    { name: 'Home', path: '/' },
-    { name: 'Products', path: '/products' },
-    { name: 'About', path: '/about' },
+    { name: 'Inicio', path: '/' },
+    { name: 'Productos', path: '/products' },
+    { name: 'Nosotros', path: '/about' },
     { name: 'Chat', path: '/chat' },
-    { name: 'Contact', path: '/contact' },
+    { name: 'Contacto', path: '/contact' },
   ];
   
   return (

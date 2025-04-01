@@ -43,10 +43,10 @@ const Header: React.FC = () => {
             {/* Logo */}
             <Logo />
             
-            {/* Desktop Navigation */}
+            {/* Navegación de Escritorio */}
             <DesktopNav />
             
-            {/* Right side icons with theme toggle */}
+            {/* Iconos del lado derecho con selector de tema */}
             <div className="flex items-center space-x-2">
               <ThemeToggle />
               <HeaderActionItems 
@@ -58,13 +58,13 @@ const Header: React.FC = () => {
           </div>
         </div>
         
-        {/* Mobile Navigation */}
+        {/* Navegación Móvil */}
         <MobileMenu 
           isOpen={isMobileMenuOpen}
           onClose={() => setIsMobileMenuOpen(false)}
         />
 
-        {/* Search Modal */}
+        {/* Modal de Búsqueda */}
         <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
       </header>
     </>

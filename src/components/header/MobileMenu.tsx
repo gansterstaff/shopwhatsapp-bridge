@@ -11,18 +11,18 @@ interface MobileMenuProps {
 
 const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
   const menuItems = [
-    { icon: <Home className="mr-2 h-4 w-4" />, name: 'Home', path: '/' },
-    { icon: <ShoppingBag className="mr-2 h-4 w-4" />, name: 'Products', path: '/products' },
-    { icon: <Info className="mr-2 h-4 w-4" />, name: 'About', path: '/about' },
+    { icon: <Home className="mr-2 h-4 w-4" />, name: 'Inicio', path: '/' },
+    { icon: <ShoppingBag className="mr-2 h-4 w-4" />, name: 'Productos', path: '/products' },
+    { icon: <Info className="mr-2 h-4 w-4" />, name: 'Nosotros', path: '/about' },
     { icon: <MessageSquare className="mr-2 h-4 w-4" />, name: 'Chat', path: '/chat' },
-    { icon: <Phone className="mr-2 h-4 w-4" />, name: 'Contact', path: '/contact' },
+    { icon: <Phone className="mr-2 h-4 w-4" />, name: 'Contacto', path: '/contact' },
   ];
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent side="left" className="w-[300px] sm:w-[400px]">
         <SheetHeader>
-          <SheetTitle>Menu</SheetTitle>
+          <SheetTitle>Menú</SheetTitle>
         </SheetHeader>
         <div className="py-4">
           <nav className="flex flex-col space-y-3">

@@ -9,13 +9,13 @@ const Footer: React.FC = () => {
     <footer className="bg-secondary py-16">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Company Info */}
+          {/* Información de la Empresa */}
           <div className="space-y-4">
             <Link to="/" className="font-heading text-2xl font-semibold tracking-tight">
               ShopWhats
             </Link>
             <p className="text-muted-foreground text-sm max-w-xs">
-              Revolutionizing e-commerce with seamless WhatsApp integration for a more personal shopping experience.
+              Revolucionando el comercio electrónico con integración de WhatsApp para una experiencia de compra más personal.
             </p>
             <div className="flex space-x-4">
               <a 
@@ -42,16 +42,16 @@ const Footer: React.FC = () => {
             </div>
           </div>
           
-          {/* Quick Links */}
+          {/* Enlaces Rápidos */}
           <div>
-            <h3 className="font-medium text-lg mb-4">Quick Links</h3>
+            <h3 className="font-medium text-lg mb-4">Enlaces Rápidos</h3>
             <ul className="space-y-2">
               <li>
                 <Link 
                   to="/products" 
                   className="text-muted-foreground hover:text-primary transition-colors text-sm"
                 >
-                  All Products
+                  Todos los Productos
                 </Link>
               </li>
               <li>
@@ -59,7 +59,7 @@ const Footer: React.FC = () => {
                   to="/about" 
                   className="text-muted-foreground hover:text-primary transition-colors text-sm"
                 >
-                  About Us
+                  Sobre Nosotros
                 </Link>
               </li>
               <li>
@@ -67,7 +67,7 @@ const Footer: React.FC = () => {
                   to="/contact" 
                   className="text-muted-foreground hover:text-primary transition-colors text-sm"
                 >
-                  Contact Us
+                  Contáctanos
                 </Link>
               </li>
               <li>
@@ -75,22 +75,22 @@ const Footer: React.FC = () => {
                   to="/blog" 
                   className="text-muted-foreground hover:text-primary transition-colors text-sm"
                 >
-                  Our Blog
+                  Nuestro Blog
                 </Link>
               </li>
             </ul>
           </div>
           
-          {/* Support */}
+          {/* Soporte */}
           <div>
-            <h3 className="font-medium text-lg mb-4">Support</h3>
+            <h3 className="font-medium text-lg mb-4">Soporte</h3>
             <ul className="space-y-2">
               <li>
                 <Link 
                   to="/faq" 
                   className="text-muted-foreground hover:text-primary transition-colors text-sm"
                 >
-                  FAQs
+                  Preguntas Frecuentes
                 </Link>
               </li>
               <li>
@@ -98,7 +98,7 @@ const Footer: React.FC = () => {
                   to="/shipping" 
                   className="text-muted-foreground hover:text-primary transition-colors text-sm"
                 >
-                  Shipping Policy
+                  Política de Envíos
                 </Link>
               </li>
               <li>
@@ -106,7 +106,7 @@ const Footer: React.FC = () => {
                   to="/returns" 
                   className="text-muted-foreground hover:text-primary transition-colors text-sm"
                 >
-                  Returns & Refunds
+                  Devoluciones y Reembolsos
                 </Link>
               </li>
               <li>
@@ -114,22 +114,22 @@ const Footer: React.FC = () => {
                   to="/privacy" 
                   className="text-muted-foreground hover:text-primary transition-colors text-sm"
                 >
-                  Privacy Policy
+                  Política de Privacidad
                 </Link>
               </li>
             </ul>
           </div>
           
-          {/* Newsletter */}
+          {/* Boletín */}
           <div>
-            <h3 className="font-medium text-lg mb-4">Join Our Newsletter</h3>
+            <h3 className="font-medium text-lg mb-4">Suscríbete a Nuestro Boletín</h3>
             <p className="text-muted-foreground text-sm mb-4">
-              Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.
+              Suscríbete para recibir ofertas especiales, sorteos y promociones exclusivas.
             </p>
             <form className="flex">
               <input 
                 type="email" 
-                placeholder="Your email" 
+                placeholder="Tu email" 
                 className={cn(
                   "flex-1 px-4 py-2 text-sm rounded-l-md",
                   "bg-white dark:bg-gray-800 border border-border",
@@ -150,9 +150,9 @@ const Footer: React.FC = () => {
           </div>
         </div>
         
-        {/* Bottom section */}
+        {/* Sección inferior */}
         <div className="mt-12 pt-6 border-t border-border text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} ShopWhats. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} ShopWhats. Todos los derechos reservados.</p>
         </div>
       </div>
     </footer>
