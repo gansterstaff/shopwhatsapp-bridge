@@ -1,8 +1,10 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Home, ShoppingBag, Info, Phone, MessageSquare } from 'lucide-react';
+import { Home, ShoppingBag, Info, Phone, MessageSquare, ShieldCheck } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/lib/supabase';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -10,6 +12,34 @@ interface MobileMenuProps {
 }
 
 const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
+  const { user } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
+  
+  useEffect(() => {
+    const checkUserRole = async () => {
+      if (user) {
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .single();
+          
+          if (error) {
+            console.error('Error al verificar rol de usuario:', error);
+            return;
+          }
+          
+          setIsAdmin(data?.role === 'admin');
+        } catch (error) {
+          console.error('Error al verificar rol de usuario:', error);
+        }
+      }
+    };
+    
+    checkUserRole();
+  }, [user]);
+
   const menuItems = [
     { icon: <Home className="mr-2 h-4 w-4" />, name: 'Inicio', path: '/' },
     { icon: <ShoppingBag className="mr-2 h-4 w-4" />, name: 'Productos', path: '/products' },
@@ -37,6 +67,17 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                 {item.name}
               </Link>
             ))}
+            
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className="flex items-center px-2 py-2 text-sm rounded-md text-primary hover:bg-muted"
+                onClick={onClose}
+              >
+                <ShieldCheck className="mr-2 h-4 w-4" />
+                Panel de Administración
+              </Link>
+            )}
           </nav>
         </div>
       </SheetContent>
