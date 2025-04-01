@@ -9,11 +9,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ShieldCheck } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+import { useState } from 'react';
 
 const Profile = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // Redireccionar si no hay usuario autenticado
   useEffect(() => {
@@ -21,6 +25,32 @@ const Profile = () => {
       navigate('/login');
     }
   }, [user, loading, navigate]);
+
+  // Verificar si el usuario es admin
+  useEffect(() => {
+    const checkUserRole = async () => {
+      if (user) {
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .single();
+          
+          if (error) {
+            console.error('Error al verificar rol de usuario:', error);
+            return;
+          }
+          
+          setIsAdmin(data?.role === 'admin');
+        } catch (error) {
+          console.error('Error al verificar rol de usuario:', error);
+        }
+      }
+    };
+    
+    checkUserRole();
+  }, [user]);
 
   // Obtener iniciales del nombre para el avatar
   const getInitials = (name: string) => {
@@ -38,6 +68,11 @@ const Profile = () => {
       title: "Perfil actualizado",
       description: "Los cambios han sido guardados correctamente.",
     });
+  };
+
+  // Navegar al panel de administración
+  const handleAdminAccess = () => {
+    navigate('/admin');
   };
 
   if (loading) {
@@ -210,6 +245,26 @@ const Profile = () => {
                       Configurar
                     </Button>
                   </div>
+                  
+                  {isAdmin && (
+                    <div className="flex items-center justify-between border-t pt-4 mt-6">
+                      <div>
+                        <h4 className="font-medium flex items-center text-primary">
+                          <ShieldCheck className="mr-2 h-4 w-4" />
+                          Panel de Administración
+                        </h4>
+                        <p className="text-sm text-muted-foreground">
+                          Accede al panel administrativo para gestionar pedidos y estadísticas
+                        </p>
+                      </div>
+                      <Button 
+                        onClick={handleAdminAccess}
+                        className="bg-primary hover:bg-primary/90"
+                      >
+                        Acceder
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
