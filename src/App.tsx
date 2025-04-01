@@ -19,6 +19,7 @@ import Orders from "./pages/Orders";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import Chat from "./pages/Chat";
+import Support from "./pages/Support";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ChatButton from "./components/ChatButton";
@@ -73,6 +74,7 @@ const App = () => (
                         <Route path="/orders" element={<Orders />} />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/settings" element={<Settings />} />
+                        <Route path="/support" element={<Support />} />
                         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                         <Route path="*" element={<NotFound />} />
                       </Routes>
