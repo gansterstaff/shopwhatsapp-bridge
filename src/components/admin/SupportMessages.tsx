@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase';
@@ -51,7 +50,6 @@ const SupportMessages = () => {
   const loadConversations = async () => {
     try {
       setLoading(true);
-      // Obtener todas las conversaciones donde el admin es parte
       const { data, error } = await supabase
         .from('support_messages_view')
         .select('*')
@@ -77,7 +75,6 @@ const SupportMessages = () => {
       setIsLoadingMessages(true);
       setCurrentUser(userId);
       
-      // Obtener mensajes de la conversación
       const { data, error } = await supabase
         .from('support_messages')
         .select(`
@@ -95,7 +92,6 @@ const SupportMessages = () => {
 
       if (error) throw error;
 
-      // Transformar los datos para incluir email y nombre
       const formattedMessages = data.map(msg => ({
         ...msg,
         user_email: msg.profiles?.email,
@@ -104,14 +100,12 @@ const SupportMessages = () => {
 
       setMessages(formattedMessages);
       
-      // Marcar mensajes como leídos
       await supabase
         .from('support_messages')
         .update({ read: true })
         .eq('user_id', userId)
         .eq('is_from_admin', false);
         
-      // Actualizar la lista de conversaciones para reflejar cambios en no leídos
       loadConversations();
     } catch (error: any) {
       console.error('Error cargando mensajes:', error);
@@ -143,7 +137,6 @@ const SupportMessages = () => {
         
       if (error) throw error;
       
-      // Limpiar y recargar
       setReplyText('');
       loadMessages(currentUser);
       loadConversations();
@@ -199,7 +192,6 @@ const SupportMessages = () => {
       </CardHeader>
       <CardContent className="p-0 h-[calc(100%-5rem)]">
         <div className="grid grid-cols-12 h-full">
-          {/* Lista de conversaciones */}
           <div className="col-span-4 border-r h-full">
             <ScrollArea className="h-full">
               {conversations.length === 0 ? (
@@ -251,7 +243,6 @@ const SupportMessages = () => {
             </ScrollArea>
           </div>
           
-          {/* Mensajes de la conversación seleccionada */}
           <div className="col-span-8 h-full flex flex-col">
             {currentUser ? (
               <>

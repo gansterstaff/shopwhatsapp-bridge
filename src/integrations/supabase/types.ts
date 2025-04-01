@@ -146,9 +146,85 @@ export type Database = {
         }
         Relationships: []
       }
+      promotional_banners: {
+        Row: {
+          active: boolean | null
+          background_color: string
+          code: string | null
+          content: string
+          created_at: string | null
+          discount: number | null
+          id: number
+          text_color: string
+          title: string
+        }
+        Insert: {
+          active?: boolean | null
+          background_color?: string
+          code?: string | null
+          content: string
+          created_at?: string | null
+          discount?: number | null
+          id?: number
+          text_color?: string
+          title: string
+        }
+        Update: {
+          active?: boolean | null
+          background_color?: string
+          code?: string | null
+          content?: string
+          created_at?: string | null
+          discount?: number | null
+          id?: number
+          text_color?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      support_messages: {
+        Row: {
+          admin_id: string | null
+          content: string
+          created_at: string | null
+          id: string
+          is_from_admin: boolean | null
+          read: boolean | null
+          user_id: string
+        }
+        Insert: {
+          admin_id?: string | null
+          content: string
+          created_at?: string | null
+          id?: string
+          is_from_admin?: boolean | null
+          read?: boolean | null
+          user_id: string
+        }
+        Update: {
+          admin_id?: string | null
+          content?: string
+          created_at?: string | null
+          id?: string
+          is_from_admin?: boolean | null
+          read?: boolean | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      support_messages_view: {
+        Row: {
+          last_message: string | null
+          last_message_time: string | null
+          unread_count: number | null
+          user_email: string | null
+          user_id: string | null
+          user_name: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
