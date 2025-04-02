@@ -11,7 +11,6 @@ export interface Message {
   read: boolean;
   user_email?: string;
   user_name?: string;
-  // Update the profiles type to match what Supabase returns
   profiles?: {
     email: string;
     name: string | null;
