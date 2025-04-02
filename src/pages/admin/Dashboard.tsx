@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import SalesReport from '@/components/admin/SalesReport';
-import BannerManager from '@/components/admin/BannerManager';
+import BannerManagerRefactored from '@/components/admin/BannerManagerRefactored';
 import SupportMessages from '@/components/admin/SupportMessages';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -59,7 +59,7 @@ const AdminDashboard = () => {
           </TabsContent>
 
           <TabsContent value="banners">
-            <BannerManager />
+            <BannerManagerRefactored />
           </TabsContent>
 
           <TabsContent value="support">

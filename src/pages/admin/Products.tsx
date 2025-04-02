@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -8,7 +7,7 @@ import {
 } from "@/components/ui/table";
 import { 
   Dialog, DialogContent, DialogDescription, DialogFooter, 
-  DialogHeader, DialogTitle, DialogTrigger 
+  DialogHeader, DialogTitle
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +21,7 @@ import { Helmet } from 'react-helmet';
 import { Edit, Trash2, Plus, Search } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Product } from '@/lib/types';
+import ImageUpload from '@/components/admin/ImageUpload';
 
 const ProductsManagement = () => {
   const { user } = useAuth();
@@ -128,6 +128,13 @@ const ProductsManagement = () => {
     setFormData(prev => ({
       ...prev,
       [name]: checked
+    }));
+  };
+
+  const handleImageSelected = (url: string) => {
+    setFormData(prev => ({
+      ...prev,
+      image: url
     }));
   };
 
@@ -482,28 +489,25 @@ const ProductsManagement = () => {
                     />
                   </div>
                   
-                  <div className="space-y-2">
-                    <Label htmlFor="image">URL de Imagen</Label>
-                    <Input
-                      id="image"
-                      name="image"
-                      value={formData.image}
-                      onChange={handleInputChange}
-                      required
+                  <div className="flex items-center space-x-2 pt-2">
+                    <Checkbox
+                      id="featured"
+                      checked={formData.featured}
+                      onCheckedChange={(checked) => 
+                        handleCheckboxChange('featured', checked as boolean)
+                      }
                     />
+                    <Label htmlFor="featured">Producto destacado</Label>
                   </div>
                 </div>
                 
-                <div className="flex items-center space-x-2 pt-2">
-                  <Checkbox
-                    id="featured"
-                    checked={formData.featured}
-                    onCheckedChange={(checked) => 
-                      handleCheckboxChange('featured', checked as boolean)
-                    }
-                  />
-                  <Label htmlFor="featured">Producto destacado</Label>
-                </div>
+                <ImageUpload
+                  initialImageUrl={formData.image}
+                  onImageSelected={handleImageSelected}
+                  label="Imagen del producto"
+                  bucketName="products"
+                  folderPath="product-images"
+                />
               </div>
               
               <DialogFooter>
