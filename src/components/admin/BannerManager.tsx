@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Eye, Save, Plus, Trash2 } from 'lucide-react';
+import { Eye, Save, Plus, Trash2, Upload } from 'lucide-react';
 
 interface Banner {
   id: number;
@@ -20,6 +20,7 @@ interface Banner {
   discount?: number;
   background_color: string;
   text_color: string;
+  image_url?: string;
 }
 
 const defaultBanner: Banner = {
@@ -30,13 +31,16 @@ const defaultBanner: Banner = {
   code: 'WELCOME20',
   discount: 20,
   background_color: '#000000',
-  text_color: '#FFFFFF'
+  text_color: '#FFFFFF',
+  image_url: ''
 };
 
 const BannerManager = () => {
   const [banners, setBanners] = useState<Banner[]>([]);
   const [currentBanner, setCurrentBanner] = useState<Banner>(defaultBanner);
   const [isLoading, setIsLoading] = useState(true);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -82,6 +86,82 @@ const BannerManager = () => {
       ...prev,
       active: checked
     }));
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedImage(e.target.files[0]);
+    }
+  };
+
+  const uploadImage = async () => {
+    if (!selectedImage) {
+      toast({
+        title: "Error",
+        description: "Por favor selecciona una imagen primero",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      setUploadingImage(true);
+      
+      // Crear bucket si no existe
+      const { data: bucketData, error: bucketError } = await supabase
+        .storage
+        .getBucket('banner-images');
+        
+      if (bucketError && bucketError.message.includes('not found')) {
+        await supabase.storage.createBucket('banner-images', {
+          public: true
+        });
+      }
+      
+      // Subir imagen
+      const fileName = `banner-${currentBanner.id || 'new'}-${Date.now()}`;
+      const fileExt = selectedImage.name.split('.').pop();
+      const filePath = `${fileName}.${fileExt}`;
+      
+      const { data, error } = await supabase
+        .storage
+        .from('banner-images')
+        .upload(filePath, selectedImage, {
+          upsert: true
+        });
+        
+      if (error) throw error;
+      
+      // Obtener URL pública
+      const { data: publicUrlData } = supabase
+        .storage
+        .from('banner-images')
+        .getPublicUrl(filePath);
+        
+      const imageUrl = publicUrlData.publicUrl;
+      
+      // Actualizar banner con la URL de la imagen
+      setCurrentBanner(prev => ({
+        ...prev,
+        image_url: imageUrl
+      }));
+      
+      toast({
+        title: "Imagen subida",
+        description: "La imagen se ha subido correctamente"
+      });
+      
+    } catch (error: any) {
+      console.error('Error subiendo imagen:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo subir la imagen",
+        variant: "destructive",
+      });
+    } finally {
+      setUploadingImage(false);
+      setSelectedImage(null);
+    }
   };
 
   const handleSave = async () => {
@@ -264,8 +344,54 @@ const BannerManager = () => {
                       onChange={handleInputChange}
                     />
                   </div>
+
+                  {/* Sección de imagen */}
+                  <div className="space-y-2 border-t pt-4">
+                    <Label>Imagen de banner</Label>
+                    <div className="flex flex-col space-y-2">
+                      {currentBanner.image_url && (
+                        <div className="relative w-full h-32 bg-gray-100 rounded-md mb-2 overflow-hidden">
+                          <img 
+                            src={currentBanner.image_url} 
+                            alt={currentBanner.title}
+                            className="w-full h-full object-contain" 
+                          />
+                        </div>
+                      )}
+                      <div className="flex space-x-2">
+                        <Input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageChange}
+                          className="flex-1"
+                        />
+                        <Button 
+                          type="button" 
+                          onClick={uploadImage}
+                          disabled={!selectedImage || uploadingImage}
+                          className="whitespace-nowrap"
+                        >
+                          {uploadingImage ? (
+                            <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                          ) : (
+                            <>
+                              <Upload className="h-4 w-4 mr-2" />
+                              Subir
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                      <Input
+                        id="image_url"
+                        name="image_url"
+                        placeholder="URL de la imagen (o suba una nueva)"
+                        value={currentBanner.image_url || ''}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </div>
                   
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-3 gap-4 border-t pt-4">
                     <div className="space-y-2">
                       <Label htmlFor="discount">Descuento (%)</Label>
                       <Input
@@ -344,27 +470,37 @@ const BannerManager = () => {
             <div className="border rounded-md p-6 flex flex-col items-center">
               <h3 className="font-medium mb-4">Vista previa del banner</h3>
               
-              <div 
-                className="w-full max-w-md rounded-lg shadow-lg p-4 my-4"
-                style={{ 
-                  backgroundColor: currentBanner.background_color,
-                  color: currentBanner.text_color
-                }}
-              >
-                <h4 className="font-bold">{currentBanner.title}</h4>
-                <p>{currentBanner.content}</p>
-                {currentBanner.code && (
-                  <div className="mt-2">
-                    <span className="font-bold">Código: </span>
-                    <span className="bg-white bg-opacity-20 px-2 py-1 rounded">{currentBanner.code}</span>
-                  </div>
-                )}
-                {currentBanner.discount && (
-                  <div className="text-right font-bold mt-2">
-                    {currentBanner.discount}% OFF
-                  </div>
-                )}
-              </div>
+              {currentBanner.image_url ? (
+                <div className="w-full max-w-md rounded-lg shadow-lg overflow-hidden mb-4">
+                  <img 
+                    src={currentBanner.image_url} 
+                    alt={currentBanner.title}
+                    className="w-full h-auto" 
+                  />
+                </div>
+              ) : (
+                <div 
+                  className="w-full max-w-md rounded-lg shadow-lg p-4 my-4"
+                  style={{ 
+                    backgroundColor: currentBanner.background_color,
+                    color: currentBanner.text_color
+                  }}
+                >
+                  <h4 className="font-bold">{currentBanner.title}</h4>
+                  <p>{currentBanner.content}</p>
+                  {currentBanner.code && (
+                    <div className="mt-2">
+                      <span className="font-bold">Código: </span>
+                      <span className="bg-white bg-opacity-20 px-2 py-1 rounded">{currentBanner.code}</span>
+                    </div>
+                  )}
+                  {currentBanner.discount && (
+                    <div className="text-right font-bold mt-2">
+                      {currentBanner.discount}% OFF
+                    </div>
+                  )}
+                </div>
+              )}
               
               <div className="text-center text-sm text-gray-500 mt-4">
                 {currentBanner.active ? 

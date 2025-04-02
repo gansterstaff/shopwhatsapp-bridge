@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link, Outlet } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -89,7 +88,7 @@ const AdminLayout = () => {
     {
       icon: Settings,
       label: 'Configuración',
-      href: '/admin/settings'
+      href: '/settings'
     }
   ];
 

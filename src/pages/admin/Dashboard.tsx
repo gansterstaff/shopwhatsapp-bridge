@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
-import { BarChart2, MessageSquare, Image, ShoppingBag } from 'lucide-react';
+import { BarChart2, MessageSquare, Image, ShoppingBag, Settings } from 'lucide-react';
 
 const AdminDashboard = () => {
   const { toast } = useToast();
@@ -31,7 +31,7 @@ const AdminDashboard = () => {
         <h1 className="text-3xl font-bold mb-6">Panel de Administración</h1>
 
         <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
-          <TabsList className="grid grid-cols-4 w-full">
+          <TabsList className="grid grid-cols-5 w-full">
             <TabsTrigger value="overview" className="flex items-center justify-center">
               <BarChart2 className="h-4 w-4 mr-2" />
               <span>Reportes</span>
@@ -47,6 +47,10 @@ const AdminDashboard = () => {
             <TabsTrigger value="products" className="flex items-center justify-center">
               <ShoppingBag className="h-4 w-4 mr-2" />
               <span>Productos</span>
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="flex items-center justify-center">
+              <Settings className="h-4 w-4 mr-2" />
+              <span>Configuración</span>
             </TabsTrigger>
           </TabsList>
 
@@ -77,6 +81,27 @@ const AdminDashboard = () => {
                   </p>
                   <Button onClick={() => navigate('/admin/products')}>
                     Ir a Gestión de Productos
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="settings">
+            <Card>
+              <CardHeader>
+                <CardTitle>Configuración del Sistema</CardTitle>
+                <CardDescription>
+                  Administra las preferencias y configuraciones generales de la tienda
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground mb-6">
+                    Accede a la configuración completa de la tienda donde podrás modificar las preferencias de cuenta y compra.
+                  </p>
+                  <Button onClick={() => navigate('/settings')}>
+                    Ir a Configuración
                   </Button>
                 </div>
               </CardContent>
