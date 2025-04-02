@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { 
   LayoutDashboard, Package, UserRound, ShoppingBag, 
@@ -20,6 +20,7 @@ interface SidebarNavProps {
 
 const SidebarNav: React.FC<SidebarNavProps> = ({ isSidebarOpen }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   
   const navItems: NavItem[] = [
     {
@@ -54,15 +55,20 @@ const SidebarNav: React.FC<SidebarNavProps> = ({ isSidebarOpen }) => {
     }
   ];
 
+  // Controla la navegación especial para configuración (que sale del admin layout)
+  const handleNavigation = (href: string) => {
+    navigate(href);
+  };
+
   return (
     <ScrollArea className="flex-1 py-4">
       <nav className="px-2 space-y-1">
         {navItems.map((item) => (
-          <Link
+          <div
             key={item.href}
-            to={item.href}
+            onClick={() => handleNavigation(item.href)}
             className={cn(
-              "flex items-center py-3 px-3 rounded-md text-gray-700 hover:bg-gray-100 transition-colors",
+              "flex items-center py-3 px-3 rounded-md text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer",
               location.pathname === item.href && "bg-gray-100 text-primary"
             )}
           >
@@ -71,7 +77,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({ isSidebarOpen }) => {
               isSidebarOpen ? "mr-3" : "mx-auto"
             )} />
             {isSidebarOpen && <span>{item.label}</span>}
-          </Link>
+          </div>
         ))}
       </nav>
     </ScrollArea>

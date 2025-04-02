@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { Toaster } from '@/components/ui/toaster';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+import PublicLayout from '@/components/layouts/PublicLayout';
 import Index from '@/pages/Index';
 import Products from '@/pages/Products';
 import ProductDetail from '@/pages/ProductDetail';
@@ -42,20 +43,20 @@ function App() {
         <AuthProvider>
           <CartProvider>
             <Routes>
-              {/* Public routes */}
-              <Route path="/" element={<Index />} />
-              <Route path="/products" element={<Products />} />
-              <Route path="/product/:id" element={<ProductDetail />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/login" element={<Login />} />
+              {/* Public routes using PublicLayout */}
+              <Route path="/" element={<PublicLayout showPromoBanner={true}><Index /></PublicLayout>} />
+              <Route path="/products" element={<PublicLayout><Products /></PublicLayout>} />
+              <Route path="/product/:id" element={<PublicLayout><ProductDetail /></PublicLayout>} />
+              <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
+              <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
+              <Route path="/login" element={<PublicLayout><Login /></PublicLayout>} />
               <Route path="/auth/callback" element={<AuthCallback />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/support" element={<Support />} />
-              <Route path="/chat" element={<Chat />} />
-              <Route path="/orders" element={<Orders />} />
-              <Route path="/settings" element={<Settings />} />
+              <Route path="/cart" element={<PublicLayout><Cart /></PublicLayout>} />
+              <Route path="/profile" element={<PublicLayout><Profile /></PublicLayout>} />
+              <Route path="/support" element={<PublicLayout><Support /></PublicLayout>} />
+              <Route path="/chat" element={<PublicLayout><Chat /></PublicLayout>} />
+              <Route path="/orders" element={<PublicLayout><Orders /></PublicLayout>} />
+              <Route path="/settings" element={<PublicLayout><Settings /></PublicLayout>} />
               
               {/* Admin routes */}
               <Route path="/admin" element={<AdminLayoutRefactored />}>
@@ -64,10 +65,11 @@ function App() {
                 <Route path="orders" element={<AdminOrders />} />
                 <Route path="users" element={<AdminUsers />} />
                 <Route path="reports" element={<Navigate to="/admin" />} />
+                <Route path="settings" element={<Navigate to="/settings" />} />
               </Route>
               
               {/* 404 */}
-              <Route path="*" element={<NotFound />} />
+              <Route path="*" element={<PublicLayout><NotFound /></PublicLayout>} />
             </Routes>
             <Toaster />
           </CartProvider>
