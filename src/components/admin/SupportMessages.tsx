@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase';
@@ -22,6 +23,10 @@ interface Message {
   read: boolean;
   user_email?: string;
   user_name?: string;
+  profiles?: {
+    email: string;
+    name: string | null;
+  };
 }
 
 interface Conversation {
@@ -94,8 +99,8 @@ const SupportMessages = () => {
 
       const formattedMessages = data.map(msg => ({
         ...msg,
-        user_email: msg.profiles?.email,
-        user_name: msg.profiles?.name
+        user_email: msg.profiles ? msg.profiles.email : undefined,
+        user_name: msg.profiles ? msg.profiles.name : undefined
       }));
 
       setMessages(formattedMessages);
