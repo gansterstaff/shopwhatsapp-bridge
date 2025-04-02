@@ -64,9 +64,11 @@ const SupportMessageService = {
       is_from_admin: msg.is_from_admin,
       created_at: msg.created_at,
       read: msg.read,
-      user_email: msg.profiles?.email,
-      user_name: msg.profiles?.name,
-      profiles: msg.profiles
+      // Usar el primer elemento del array si existe, o valores predeterminados si no
+      user_email: msg.profiles?.[0]?.email,
+      user_name: msg.profiles?.[0]?.name,
+      // Guardamos el primer elemento del array como un objeto
+      profiles: msg.profiles?.[0]
     }));
 
     return formattedMessages;
