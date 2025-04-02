@@ -11,6 +11,7 @@ export interface Message {
   read: boolean;
   user_email?: string;
   user_name?: string;
+  // Update the profiles property to accept an object or undefined
   profiles?: {
     email: string;
     name: string | null;
@@ -57,6 +58,9 @@ const SupportMessageService = {
 
     // Transform the data to match the Message interface
     const formattedMessages: Message[] = data.map(msg => {
+      // Extract profiles data correctly - it might be null or an object, not an array
+      const profileData = msg.profiles;
+      
       return {
         id: msg.id,
         user_id: msg.user_id,
@@ -65,10 +69,10 @@ const SupportMessageService = {
         is_from_admin: msg.is_from_admin,
         created_at: msg.created_at,
         read: msg.read,
-        // Handle profiles object correctly
-        user_email: msg.profiles?.email,
-        user_name: msg.profiles?.name,
-        profiles: msg.profiles
+        // Handle profile data appropriately
+        user_email: profileData?.email,
+        user_name: profileData?.name,
+        profiles: profileData
       };
     });
 
