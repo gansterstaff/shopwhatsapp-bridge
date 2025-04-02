@@ -1,24 +1,9 @@
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import MessageItem from './MessageItem';
 import LoadingSpinner from './LoadingSpinner';
-
-interface Message {
-  id: string;
-  user_id: string;
-  admin_id: string | null;
-  content: string;
-  is_from_admin: boolean;
-  created_at: string;
-  read: boolean;
-  user_email?: string;
-  user_name?: string;
-  profiles?: {
-    email: string;
-    name: string | null;
-  };
-}
+import { Message } from './SupportMessageService';
 
 interface MessagesListProps {
   messages: Message[];
@@ -31,6 +16,15 @@ const MessagesList: React.FC<MessagesListProps> = ({
   isLoading,
   formatDate
 }) => {
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    if (messages.length && !isLoading) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, isLoading]);
+
   return (
     <ScrollArea className="flex-1 p-4">
       {isLoading ? (
@@ -53,6 +47,7 @@ const MessagesList: React.FC<MessagesListProps> = ({
               No hay mensajes en esta conversación
             </div>
           )}
+          <div ref={messagesEndRef} />
         </div>
       )}
     </ScrollArea>

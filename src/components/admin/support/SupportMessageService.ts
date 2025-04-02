@@ -55,10 +55,19 @@ const SupportMessageService = {
 
     if (error) throw error;
 
-    const formattedMessages = data.map(msg => ({
-      ...msg,
+    // Transform the data to match the Message interface
+    const formattedMessages: Message[] = data.map(msg => ({
+      id: msg.id,
+      user_id: msg.user_id,
+      admin_id: msg.admin_id,
+      content: msg.content,
+      is_from_admin: msg.is_from_admin,
+      created_at: msg.created_at,
+      read: msg.read,
+      // Access profiles object directly (not as an array)
       user_email: msg.profiles?.email,
-      user_name: msg.profiles?.name
+      user_name: msg.profiles?.name,
+      profiles: msg.profiles
     }));
 
     return formattedMessages;
