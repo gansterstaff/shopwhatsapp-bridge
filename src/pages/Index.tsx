@@ -10,6 +10,7 @@ import WhyChooseUs from '@/components/WhyChooseUs';
 import PromotionalBanner from '@/components/PromotionalBanner';
 import AboutCarousel from '@/components/AboutCarousel';
 import FestiveBanner from '@/components/FestiveBanner';
+import PublicLayout from '@/components/layouts/PublicLayout';
 
 const Index: React.FC = () => {
   // Add a smooth scroll effect when page loads
@@ -21,20 +22,21 @@ const Index: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <main className="flex-grow">
-        <Hero />
-        <Categories />
-        <FeaturedProducts />
-        <AboutCarousel />
-        <WhyChooseUs />
-        <Benefits />
-        <Testimonials />
-        <Newsletter />
-      </main>
-      <PromotionalBanner />
-      <FestiveBanner />
-    </div>
+    <PublicLayout showPromoBanner={true}>
+      <div className="min-h-screen flex flex-col">
+        <main className="flex-grow">
+          <Hero />
+          <Categories />
+          <FeaturedProducts />
+          <AboutCarousel />
+          <WhyChooseUs />
+          <Benefits />
+          <Testimonials />
+          <Newsletter />
+        </main>
+        <FestiveBanner />
+      </div>
+    </PublicLayout>
   );
 };
 

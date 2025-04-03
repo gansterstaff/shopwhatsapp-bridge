@@ -3,6 +3,7 @@ import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import PromotionalBanner from '@/components/PromotionalBanner';
+import OnboardingBanner from '@/components/OnboardingBanner';
 
 interface PublicLayoutProps {
   children: React.ReactNode;
@@ -21,6 +22,9 @@ const PublicLayout: React.FC<PublicLayoutProps> = ({
         {children}
       </main>
       <Footer />
+      
+      {/* Banner de onboarding para nuevos usuarios */}
+      <OnboardingBanner />
     </div>
   );
 };
