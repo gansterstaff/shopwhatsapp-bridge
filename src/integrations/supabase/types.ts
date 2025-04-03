@@ -88,7 +88,9 @@ export type Database = {
           discount: number | null
           featured: boolean | null
           id: number
-          image: string
+          image_bucket: string | null
+          image_path: string | null
+          image_url: string
           name: string
           old_price: number | null
           price: number
@@ -101,7 +103,9 @@ export type Database = {
           discount?: number | null
           featured?: boolean | null
           id?: number
-          image: string
+          image_bucket?: string | null
+          image_path?: string | null
+          image_url: string
           name: string
           old_price?: number | null
           price: number
@@ -114,7 +118,9 @@ export type Database = {
           discount?: number | null
           featured?: boolean | null
           id?: number
-          image?: string
+          image_bucket?: string | null
+          image_path?: string | null
+          image_url?: string
           name?: string
           old_price?: number | null
           price?: number
@@ -155,6 +161,9 @@ export type Database = {
           created_at: string | null
           discount: number | null
           id: number
+          image_bucket: string | null
+          image_path: string | null
+          image_url: string | null
           text_color: string
           title: string
         }
@@ -166,6 +175,9 @@ export type Database = {
           created_at?: string | null
           discount?: number | null
           id?: number
+          image_bucket?: string | null
+          image_path?: string | null
+          image_url?: string | null
           text_color?: string
           title: string
         }
@@ -177,6 +189,9 @@ export type Database = {
           created_at?: string | null
           discount?: number | null
           id?: number
+          image_bucket?: string | null
+          image_path?: string | null
+          image_url?: string | null
           text_color?: string
           title?: string
         }

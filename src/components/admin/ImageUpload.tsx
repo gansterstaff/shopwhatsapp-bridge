@@ -9,7 +9,11 @@ import { useToast } from '@/hooks/use-toast';
 
 interface ImageUploadProps {
   initialImageUrl?: string;
-  onImageSelected: (url: string) => void;
+  onImageSelected: (imageData: {
+    url: string, 
+    path?: string, 
+    bucket?: string
+  }) => void;
   label?: string;
   bucketName?: string;
   folderPath?: string;
@@ -56,7 +60,13 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         .getPublicUrl(filePath);
 
       setImageUrl(publicUrl);
-      onImageSelected(publicUrl);
+      
+      // Pass complete image data to parent component
+      onImageSelected({
+        url: publicUrl,
+        path: filePath,
+        bucket: bucketName
+      });
       
       toast({
         title: "Imagen subida",
@@ -68,7 +78,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       // Fallback to a placeholder if there's an issue with storage
       const placeholderUrl = 'https://placehold.co/400x400?text=Producto';
       setImageUrl(placeholderUrl);
-      onImageSelected(placeholderUrl);
+      
+      // Still pass image data even with a placeholder
+      onImageSelected({
+        url: placeholderUrl
+      });
       
       toast({
         title: "Error al subir imagen",
@@ -84,7 +98,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     e.preventDefault();
     if (urlInput.trim()) {
       setImageUrl(urlInput);
-      onImageSelected(urlInput);
+      
+      // With URL, we only have the URL and not the path/bucket
+      onImageSelected({
+        url: urlInput
+      });
       
       toast({
         title: "URL de imagen actualizada",

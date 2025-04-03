@@ -6,7 +6,10 @@ export interface Product {
   price: number;
   oldPrice?: number;
   discount?: number;
-  image: string;
+  image: string; // For backwards compatibility
+  imageUrl?: string;
+  imagePath?: string;
+  imageBucket?: string;
   category: string;
   stock: number;
   featured: boolean;

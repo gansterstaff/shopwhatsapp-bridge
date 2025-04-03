@@ -75,6 +75,9 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
             alt={`${name} - Imagen principal`} 
             className={`object-contain p-4 transition-transform duration-300 ${zoomed ? 'scale-150' : 'scale-100'}`}
             loading="lazy"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = 'https://placehold.co/400x400?text=Imagen+no+disponible';
+            }}
           />
         </div>
         
@@ -132,6 +135,9 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
                       src={img} 
                       alt={`${name} - Vista ${index + 1}`}
                       className="w-full h-full object-contain p-2"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'https://placehold.co/400x400?text=Error';
+                      }}
                     />
                   </div>
                 </CarouselItem>
