@@ -35,7 +35,7 @@ const Header: React.FC = () => {
       <header 
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 py-4",
-          isScrolled ? "bg-background/80 backdrop-blur-md shadow-sm" : "bg-transparent"
+          isScrolled ? "bg-background/90 backdrop-blur-md shadow-sm" : "bg-transparent"
         )}
       >
         <div className="container mx-auto">
@@ -43,10 +43,10 @@ const Header: React.FC = () => {
             {/* Logo */}
             <Logo />
             
-            {/* Navegación de Escritorio */}
+            {/* Desktop Navigation */}
             <DesktopNav />
             
-            {/* Iconos del lado derecho con selector de tema */}
+            {/* Right side icons with theme selector */}
             <div className="flex items-center space-x-2">
               <ThemeToggle />
               <HeaderActionItems 
@@ -58,13 +58,13 @@ const Header: React.FC = () => {
           </div>
         </div>
         
-        {/* Navegación Móvil */}
+        {/* Mobile Navigation */}
         <MobileMenu 
           isOpen={isMobileMenuOpen}
           onClose={() => setIsMobileMenuOpen(false)}
         />
 
-        {/* Modal de Búsqueda */}
+        {/* Search Modal */}
         <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
       </header>
     </>
