@@ -9,6 +9,7 @@ import Categories from '@/components/Categories';
 import WhyChooseUs from '@/components/WhyChooseUs';
 import PromotionalBanner from '@/components/PromotionalBanner';
 import AboutCarousel from '@/components/AboutCarousel';
+import FestiveBanner from '@/components/FestiveBanner';
 
 const Index: React.FC = () => {
   // Add a smooth scroll effect when page loads
@@ -32,6 +33,7 @@ const Index: React.FC = () => {
         <Newsletter />
       </main>
       <PromotionalBanner />
+      <FestiveBanner />
     </div>
   );
 };
