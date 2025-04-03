@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase';
@@ -136,10 +135,10 @@ const BannerManagerRefactored = () => {
     }));
   };
 
-  const handleImageSelected = (url: string) => {
+  const handleImageSelected = (imageData: { url: string, path?: string, bucket?: string }) => {
     setFormData(prev => ({
       ...prev,
-      image: url
+      image: imageData.url
     }));
   };
 

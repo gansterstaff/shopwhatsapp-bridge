@@ -35,7 +35,6 @@ const ProductsManagement = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
 
-  // Form state
   const [formData, setFormData] = useState({
     id: null as number | null,
     name: '',
@@ -44,6 +43,8 @@ const ProductsManagement = () => {
     old_price: null as number | null,
     discount: null as number | null,
     image: '',
+    image_path: '',
+    image_bucket: 'products',
     category: '',
     stock: 0,
     featured: false
@@ -131,10 +132,12 @@ const ProductsManagement = () => {
     }));
   };
 
-  const handleImageSelected = (url: string) => {
+  const handleImageSelected = (imageData: { url: string, path?: string, bucket?: string }) => {
     setFormData(prev => ({
       ...prev,
-      image: url
+      image: imageData.url,
+      image_path: imageData.path || '',
+      image_bucket: imageData.bucket || 'products'
     }));
   };
 
@@ -147,6 +150,8 @@ const ProductsManagement = () => {
       old_price: null,
       discount: null,
       image: '',
+      image_path: '',
+      image_bucket: 'products',
       category: '',
       stock: 0,
       featured: false
@@ -162,6 +167,8 @@ const ProductsManagement = () => {
       old_price: product.oldPrice || null,
       discount: product.discount || null,
       image: product.image,
+      image_path: product.image_path || '',
+      image_bucket: product.image_bucket || 'products',
       category: product.category,
       stock: product.stock,
       featured: product.featured
@@ -190,6 +197,8 @@ const ProductsManagement = () => {
         old_price: formData.old_price,
         discount: formData.discount,
         image: formData.image,
+        image_path: formData.image_path,
+        image_bucket: formData.image_bucket,
         category: formData.category,
         stock: formData.stock,
         featured: formData.featured
@@ -198,7 +207,6 @@ const ProductsManagement = () => {
       let error;
       
       if (formData.id) {
-        // Actualizar producto existente
         const { error: updateError } = await supabase
           .from('products')
           .update(productData)
@@ -213,7 +221,6 @@ const ProductsManagement = () => {
           });
         }
       } else {
-        // Crear nuevo producto
         const { error: insertError } = await supabase
           .from('products')
           .insert([productData]);
@@ -375,7 +382,6 @@ const ProductsManagement = () => {
           </Table>
         </div>
 
-        {/* Modal para añadir/editar productos */}
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
           <DialogContent className="sm:max-w-[600px]">
             <DialogHeader>
@@ -524,7 +530,6 @@ const ProductsManagement = () => {
           </DialogContent>
         </Dialog>
 
-        {/* Dialog de confirmación para eliminar */}
         <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
