@@ -18,7 +18,7 @@ const PublicLayout: React.FC<PublicLayoutProps> = ({
     <div className="flex flex-col min-h-screen">
       <Header />
       {showPromoBanner && <PromotionalBanner />}
-      <main className="pt-20 flex-grow">
+      <main className="flex-grow pt-20">
         {children}
       </main>
       <Footer />
