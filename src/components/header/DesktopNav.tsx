@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase';
 import { TubelightNavbar } from "@/components/ui/tubelight-navbar";
 import NavDropdown from './NavDropdown';
 import NavAdminLink from './NavAdminLink';
-import NavItems from './NavItems';
+import NavItems, { NavItem } from './NavItems';
 
 const DesktopNav: React.FC = () => {
   const { user } = useAuth();
@@ -81,9 +81,9 @@ const DesktopNav: React.FC = () => {
     setCurrentContent(null);
   };
 
-  const navItems = NavItems({ handleNavigation });
+  const navItems: NavItem[] = NavItems({ handleNavigation });
 
-  const handleNavHover = (item: any) => {
+  const handleNavHover = (item: NavItem) => {
     setActiveNavItem(item.name);
     setCurrentContent(item.content);
     setIsDropdownOpen(true);
@@ -94,7 +94,7 @@ const DesktopNav: React.FC = () => {
     setCurrentContent(null);
   };
 
-  const handleMainNavClick = (item: any, event: React.MouseEvent) => {
+  const handleMainNavClick = (item: NavItem, event: React.MouseEvent) => {
     setActiveNavItem(item.name);
     
     // Toggle dropdown state
@@ -114,7 +114,7 @@ const DesktopNav: React.FC = () => {
       onMouseLeave={handleNavLeave}
     >
       <TubelightNavbar 
-        items={navItems} 
+        items={navItems}
         onNavHover={handleNavHover}
         activeItem={activeNavItem}
         className="mb-1"

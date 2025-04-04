@@ -4,7 +4,7 @@ import { Home, ShoppingBag, Users, MessageCircle, Phone, ChevronDown } from 'luc
 import NavItemContent from './NavItemContent';
 import { LucideIcon } from 'lucide-react';
 
-interface NavItem {
+export interface NavItem {
   name: string;
   url: string;
   icon: LucideIcon;
@@ -15,7 +15,7 @@ interface NavItemsProps {
   handleNavigation: (path: string) => void;
 }
 
-const NavItems: React.FC<NavItemsProps> = ({ handleNavigation }) => {
+const NavItems = ({ handleNavigation }: NavItemsProps): NavItem[] => {
   return [
     {
       name: 'Inicio',
