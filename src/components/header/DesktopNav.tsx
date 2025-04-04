@@ -6,10 +6,11 @@ import { supabase } from '@/lib/supabase';
 import { ShieldCheck, ChevronDown, Home, ShoppingBag, Users, MessageCircle, Phone } from 'lucide-react';
 import { TubelightNavbar } from "@/components/ui/tubelight-navbar";
 import {
-  NavigationMenuContent,
+  NavigationMenu,
+  NavigationMenuList,
   NavigationMenuItem,
   NavigationMenuLink,
-  NavigationMenuList,
+  NavigationMenuContent,
 } from "@/components/ui/navigation-menu";
 
 const DesktopNav: React.FC = () => {
@@ -248,9 +249,15 @@ const DesktopNav: React.FC = () => {
       />
       
       {currentContent && (
-        <div className="absolute top-full mt-1 left-0 z-10 bg-background p-4 rounded-md shadow-md animate-in fade-in slide-in-from-top-5 duration-300">
-          {currentContent}
-        </div>
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <div className="absolute top-full mt-1 left-0 z-10 bg-background p-4 rounded-md shadow-md animate-in fade-in slide-in-from-top-5 duration-300">
+                {currentContent}
+              </div>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
       )}
       
       {/* Admin Link */}
