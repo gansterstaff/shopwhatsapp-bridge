@@ -14,6 +14,7 @@ const DesktopNav: React.FC = () => {
   const [activeNavItem, setActiveNavItem] = useState<string>('Inicio');
   const [currentContent, setCurrentContent] = useState<React.ReactNode | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [activeItemIndex, setActiveItemIndex] = useState<number>(0);
   const navRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -48,14 +49,19 @@ const DesktopNav: React.FC = () => {
     const path = location.pathname;
     if (path === '/' || path.startsWith('/#')) {
       setActiveNavItem('Inicio');
+      setActiveItemIndex(0);
     } else if (path.startsWith('/products')) {
       setActiveNavItem('Productos');
+      setActiveItemIndex(1);
     } else if (path.startsWith('/about')) {
       setActiveNavItem('Nosotros');
+      setActiveItemIndex(2);
     } else if (path.startsWith('/chat')) {
       setActiveNavItem('Chat');
+      setActiveItemIndex(3);
     } else if (path.startsWith('/contact')) {
       setActiveNavItem('Contacto');
+      setActiveItemIndex(4);
     }
     
     // Close dropdown when changing routes
@@ -80,6 +86,7 @@ const DesktopNav: React.FC = () => {
 
   // Handle navigation and close dropdown
   const handleNavigation = (path: string) => {
+    console.log("Navigating to:", path);
     navigate(path);
     setIsDropdownOpen(false);
     setCurrentContent(null);
@@ -87,9 +94,10 @@ const DesktopNav: React.FC = () => {
 
   const navItems: NavItem[] = NavItems({ handleNavigation });
 
-  const handleNavHover = (item: NavItem) => {
+  const handleNavHover = (item: NavItem, index: number) => {
     setActiveNavItem(item.name);
     setCurrentContent(item.content);
+    setActiveItemIndex(index);
     setIsDropdownOpen(true);
   };
 
@@ -98,8 +106,9 @@ const DesktopNav: React.FC = () => {
     setCurrentContent(null);
   };
 
-  const handleMainNavClick = (item: NavItem, event: React.MouseEvent) => {
+  const handleMainNavClick = (item: NavItem, index: number, event: React.MouseEvent) => {
     setActiveNavItem(item.name);
+    setActiveItemIndex(index);
     
     // Toggle dropdown state
     if (activeNavItem === item.name && isDropdownOpen) {
@@ -119,13 +128,17 @@ const DesktopNav: React.FC = () => {
     >
       <TubelightNavbar 
         items={navItems}
-        onNavHover={handleNavHover}
+        onNavHover={(item, index) => handleNavHover(item, index)}
         activeItem={activeNavItem}
         className="mb-1"
-        onNavClick={handleMainNavClick}
+        onNavClick={(item, index, event) => handleMainNavClick(item, index, event)}
       />
       
-      <NavDropdown isOpen={isDropdownOpen} content={currentContent} />
+      <NavDropdown 
+        isOpen={isDropdownOpen} 
+        content={currentContent} 
+        activeItemIndex={activeItemIndex} 
+      />
       
       <NavAdminLink isAdmin={isAdmin} />
     </div>

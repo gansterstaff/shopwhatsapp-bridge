@@ -17,8 +17,8 @@ interface NavItem {
 interface NavBarProps {
   items: NavItem[]
   className?: string
-  onNavHover?: (item: NavItem) => void
-  onNavClick?: (item: NavItem, event: React.MouseEvent) => void
+  onNavHover?: (item: NavItem, index: number) => void
+  onNavClick?: (item: NavItem, index: number, event: React.MouseEvent) => void
   activeItem?: string
 }
 
@@ -42,19 +42,19 @@ export function TubelightNavbar({ items, className, onNavHover, onNavClick, acti
     }
   }, [activeItem]);
 
-  const handleMouseEnter = (item: NavItem) => {
+  const handleMouseEnter = (item: NavItem, index: number) => {
     if (onNavHover) {
-      onNavHover(item);
+      onNavHover(item, index);
     }
   };
 
-  const handleClick = (item: NavItem, event: React.MouseEvent) => {
+  const handleClick = (item: NavItem, index: number, event: React.MouseEvent) => {
     setActiveTab(item.name);
     event.preventDefault(); // Prevent default navigation
     
     // Call the parent's onClick handler if provided
     if (onNavClick) {
-      onNavClick(item, event);
+      onNavClick(item, index, event);
     }
   };
 
@@ -65,16 +65,16 @@ export function TubelightNavbar({ items, className, onNavHover, onNavClick, acti
         className,
       )}
     >
-      <div className="flex items-center gap-3 bg-background/5 backdrop-blur-lg py-1 px-1 rounded-full">
-        {items.map((item) => {
+      <div className="flex items-center justify-center gap-3 bg-background/5 backdrop-blur-lg py-1 px-1 rounded-full">
+        {items.map((item, index) => {
           const Icon = item.icon
           const isActive = activeTab === item.name
 
           return (
             <div
               key={item.name}
-              onClick={(e) => handleClick(item, e)}
-              onMouseEnter={() => handleMouseEnter(item)}
+              onClick={(e) => handleClick(item, index, e)}
+              onMouseEnter={() => handleMouseEnter(item, index)}
               className={cn(
                 "relative cursor-pointer text-sm font-medium px-4 py-2 rounded-full transition-colors",
                 "text-foreground/80 hover:text-primary",
