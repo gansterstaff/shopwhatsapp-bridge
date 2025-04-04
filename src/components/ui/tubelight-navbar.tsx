@@ -50,6 +50,7 @@ export function TubelightNavbar({ items, className, onNavHover, onNavClick, acti
 
   const handleClick = (item: NavItem, event: React.MouseEvent) => {
     setActiveTab(item.name);
+    event.preventDefault(); // Prevent default navigation
     
     // Call the parent's onClick handler if provided
     if (onNavClick) {
@@ -70,9 +71,8 @@ export function TubelightNavbar({ items, className, onNavHover, onNavClick, acti
           const isActive = activeTab === item.name
 
           return (
-            <Link
+            <div
               key={item.name}
-              to={item.url}
               onClick={(e) => handleClick(item, e)}
               onMouseEnter={() => handleMouseEnter(item)}
               className={cn(
@@ -81,7 +81,7 @@ export function TubelightNavbar({ items, className, onNavHover, onNavClick, acti
                 isActive && "text-primary",
               )}
             >
-              <span className="hidden md:inline flex items-center">
+              <span className="hidden md:flex items-center">
                 <Icon className="mr-1.5 h-4 w-4" />
                 {item.name}
               </span>
@@ -106,7 +106,7 @@ export function TubelightNavbar({ items, className, onNavHover, onNavClick, acti
                   </div>
                 </motion.div>
               )}
-            </Link>
+            </div>
           )
         })}
       </div>
