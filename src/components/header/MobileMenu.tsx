@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { 
   Home, 
@@ -40,6 +40,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
   const { user } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
+  const navigate = useNavigate();
   
   useEffect(() => {
     const checkUserRole = async () => {
@@ -73,6 +74,11 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
     }));
   };
 
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    onClose();
+  };
+
   const menuItems: MenuItem[] = [
     { 
       icon: <Home className="mr-2 h-4 w-4" />, 
@@ -94,7 +100,8 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
         { name: 'Ropa', path: '/products?category=clothing' },
         { name: 'Hogar', path: '/products?category=home' },
         { name: 'Novedades', path: '/products?collection=new' },
-        { name: 'Más Vendidos', path: '/products?collection=bestsellers' }
+        { name: 'Más Vendidos', path: '/products?collection=bestsellers' },
+        { name: 'Promociones', path: '/products?collection=promotion' }
       ]
     },
     { 
@@ -159,14 +166,13 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                     <CollapsibleContent>
                       <div className="pl-6 mt-1 space-y-1">
                         {item.submenu.map((subitem) => (
-                          <Link
+                          <div
                             key={subitem.name}
-                            to={subitem.path}
-                            className="flex items-center px-2 py-1.5 text-sm rounded-md hover:bg-muted"
-                            onClick={onClose}
+                            className="flex items-center px-2 py-1.5 text-sm rounded-md hover:bg-muted cursor-pointer"
+                            onClick={() => handleNavigation(subitem.path)}
                           >
                             {subitem.name}
-                          </Link>
+                          </div>
                         ))}
                       </div>
                     </CollapsibleContent>
@@ -176,14 +182,13 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
             ))}
             
             {isAdmin && (
-              <Link
-                to="/admin"
-                className="flex items-center px-2 py-2 text-sm rounded-md text-primary hover:bg-muted"
-                onClick={onClose}
+              <div
+                className="flex items-center px-2 py-2 text-sm rounded-md text-primary hover:bg-muted cursor-pointer"
+                onClick={() => handleNavigation('/admin')}
               >
                 <ShieldCheck className="mr-2 h-4 w-4" />
                 Panel de Administración
-              </Link>
+              </div>
             )}
           </nav>
         </div>

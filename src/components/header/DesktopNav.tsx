@@ -57,6 +57,10 @@ const DesktopNav: React.FC = () => {
     } else if (path.startsWith('/contact')) {
       setActiveNavItem('Contacto');
     }
+    
+    // Close dropdown when changing routes
+    setIsDropdownOpen(false);
+    setCurrentContent(null);
   }, [location]);
 
   // Close dropdown when clicking outside
