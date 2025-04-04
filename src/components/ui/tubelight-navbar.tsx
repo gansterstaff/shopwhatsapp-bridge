@@ -18,10 +18,11 @@ interface NavBarProps {
   items: NavItem[]
   className?: string
   onNavHover?: (item: NavItem) => void
+  onNavClick?: (item: NavItem, event: React.MouseEvent) => void
   activeItem?: string
 }
 
-export function TubelightNavbar({ items, className, onNavHover, activeItem }: NavBarProps) {
+export function TubelightNavbar({ items, className, onNavHover, onNavClick, activeItem }: NavBarProps) {
   const [activeTab, setActiveTab] = useState(activeItem || items[0].name)
   const [isMobile, setIsMobile] = useState(false)
 
@@ -41,10 +42,18 @@ export function TubelightNavbar({ items, className, onNavHover, activeItem }: Na
     }
   }, [activeItem]);
 
-  const handleNavItemClick = (item: NavItem) => {
-    setActiveTab(item.name);
+  const handleMouseEnter = (item: NavItem) => {
     if (onNavHover) {
       onNavHover(item);
+    }
+  };
+
+  const handleClick = (item: NavItem, event: React.MouseEvent) => {
+    setActiveTab(item.name);
+    
+    // Call the parent's onClick handler if provided
+    if (onNavClick) {
+      onNavClick(item, event);
     }
   };
 
@@ -64,7 +73,8 @@ export function TubelightNavbar({ items, className, onNavHover, activeItem }: Na
             <Link
               key={item.name}
               to={item.url}
-              onClick={() => handleNavItemClick(item)}
+              onClick={(e) => handleClick(item, e)}
+              onMouseEnter={() => handleMouseEnter(item)}
               className={cn(
                 "relative cursor-pointer text-sm font-medium px-4 py-2 rounded-full transition-colors",
                 "text-foreground/80 hover:text-primary",

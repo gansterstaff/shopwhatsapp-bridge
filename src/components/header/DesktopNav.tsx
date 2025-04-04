@@ -1,23 +1,19 @@
 
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { ShieldCheck, ChevronDown, Home, ShoppingBag, Users, MessageCircle, Phone } from 'lucide-react';
 import { TubelightNavbar } from "@/components/ui/tubelight-navbar";
-import {
-  NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuContent,
-} from "@/components/ui/navigation-menu";
 
 const DesktopNav: React.FC = () => {
   const { user } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
   const [activeNavItem, setActiveNavItem] = useState<string>('Inicio');
   const [currentContent, setCurrentContent] = useState<React.ReactNode | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
   
   useEffect(() => {
     const checkUserRole = async () => {
@@ -43,6 +39,37 @@ const DesktopNav: React.FC = () => {
     
     checkUserRole();
   }, [user]);
+
+  // Set active nav item based on current path
+  useEffect(() => {
+    const path = location.pathname;
+    if (path === '/' || path.startsWith('/#')) {
+      setActiveNavItem('Inicio');
+    } else if (path.startsWith('/products')) {
+      setActiveNavItem('Productos');
+    } else if (path.startsWith('/about')) {
+      setActiveNavItem('Nosotros');
+    } else if (path.startsWith('/chat')) {
+      setActiveNavItem('Chat');
+    } else if (path.startsWith('/contact')) {
+      setActiveNavItem('Contacto');
+    }
+  }, [location]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+        setCurrentContent(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // Define navigation items with their dropdown content
   const navItems = [
@@ -236,18 +263,44 @@ const DesktopNav: React.FC = () => {
   const handleNavHover = (item: any) => {
     setActiveNavItem(item.name);
     setCurrentContent(item.content);
+    setIsDropdownOpen(true);
+  };
+
+  const handleNavLeave = () => {
+    setIsDropdownOpen(false);
+    setCurrentContent(null);
+  };
+
+  const handleMainNavClick = (item: any, event: React.MouseEvent) => {
+    // Allow direct navigation when clicking on main nav items
+    // Don't prevent default so the Link works
+    setActiveNavItem(item.name);
+    
+    // Toggle dropdown state
+    if (activeNavItem === item.name && isDropdownOpen) {
+      setIsDropdownOpen(false);
+      setCurrentContent(null);
+    } else {
+      setIsDropdownOpen(true);
+      setCurrentContent(item.content);
+    }
   };
 
   return (
-    <div className="hidden md:block relative">
+    <div 
+      className="hidden md:block relative" 
+      ref={navRef}
+      onMouseLeave={handleNavLeave}
+    >
       <TubelightNavbar 
         items={navItems} 
         onNavHover={handleNavHover}
         activeItem={activeNavItem}
         className="mb-1"
+        onNavClick={handleMainNavClick}
       />
       
-      {currentContent && (
+      {isDropdownOpen && currentContent && (
         <div className="absolute top-full mt-1 left-0 z-10 bg-background p-4 rounded-md shadow-md animate-in fade-in slide-in-from-top-5 duration-300">
           {currentContent}
         </div>
