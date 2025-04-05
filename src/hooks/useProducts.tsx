@@ -13,7 +13,8 @@ const normalizeProduct = (product: any): Product => {
     image: product.image_url,
     imageUrl: product.image_url,
     imagePath: product.image_path,
-    imageBucket: product.image_bucket
+    imageBucket: product.image_bucket,
+    sku: product.sku
   };
 };
 
@@ -108,5 +109,37 @@ export const useProductById = (id: number) => {
       }
     },
     enabled: !!id,
+  });
+};
+
+export const useNewProducts = (limit: number = 4) => {
+  return useQuery({
+    queryKey: ['new-products', limit],
+    queryFn: async (): Promise<Product[]> => {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .order('id', { ascending: false })
+          .limit(limit);
+        
+        if (error) {
+          console.error('Error fetching new products:', error);
+          console.log('Falling back to mock data');
+          return [...mockProducts].sort((a, b) => b.id - a.id).slice(0, limit);
+        }
+        
+        if (data && data.length > 0) {
+          return data.map(normalizeProduct) as Product[];
+        } else {
+          console.log('No new products found in database, using mock data');
+          return [...mockProducts].sort((a, b) => b.id - a.id).slice(0, limit);
+        }
+      } catch (e) {
+        console.error('Error in useNewProducts:', e);
+        console.log('Falling back to mock data');
+        return [...mockProducts].sort((a, b) => b.id - a.id).slice(0, limit);
+      }
+    },
   });
 };

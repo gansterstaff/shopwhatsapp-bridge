@@ -5,7 +5,7 @@ import ProductCard from '@/components/ProductCard';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, Tag } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { Helmet } from 'react-helmet';
@@ -42,7 +42,8 @@ const Products = () => {
   const filteredProducts = products 
     ? products.filter(product => {
         const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                             product.description.toLowerCase().includes(searchTerm.toLowerCase());
+                             product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                             (product.sku && product.sku.toLowerCase().includes(searchTerm.toLowerCase()));
         const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
         return matchesSearch && matchesCategory;
       })
@@ -119,7 +120,7 @@ const Products = () => {
           <div className="relative flex-1">
             <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <Input
-              placeholder="Buscar productos..."
+              placeholder="Buscar por nombre, descripción o SKU..."
               className="pl-9"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}

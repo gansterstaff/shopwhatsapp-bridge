@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -18,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Helmet } from 'react-helmet';
-import { Edit, Trash2, Plus, Search } from 'lucide-react';
+import { Edit, Trash2, Plus, Search, Tag } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Product } from '@/lib/types';
 import ImageUpload from '@/components/admin/ImageUpload';
@@ -47,7 +48,8 @@ const ProductsManagement = () => {
     image_bucket: 'products',
     category: '',
     stock: 0,
-    featured: false
+    featured: false,
+    sku: ''
   });
 
   const categories = [
@@ -141,6 +143,13 @@ const ProductsManagement = () => {
     }));
   };
 
+  // Function to generate a unique SKU if none is provided
+  const generateSKU = () => {
+    const prefix = formData.category.substring(0, 3).toUpperCase();
+    const randomNum = Math.floor(10000 + Math.random() * 90000); // 5-digit random number
+    return `${prefix}-${randomNum}`;
+  };
+
   const resetForm = () => {
     setFormData({
       id: null,
@@ -154,7 +163,8 @@ const ProductsManagement = () => {
       image_bucket: 'products',
       category: '',
       stock: 0,
-      featured: false
+      featured: false,
+      sku: ''
     });
   };
 
@@ -171,7 +181,8 @@ const ProductsManagement = () => {
       image_bucket: product.imageBucket || 'products',
       category: product.category,
       stock: product.stock,
-      featured: product.featured
+      featured: product.featured,
+      sku: product.sku || ''
     });
     setIsModalOpen(true);
   };
@@ -190,18 +201,22 @@ const ProductsManagement = () => {
     e.preventDefault();
     
     try {
+      // Generate SKU if not provided
+      const sku = formData.sku || generateSKU();
+      
       const productData = {
         name: formData.name,
         description: formData.description,
         price: formData.price,
         old_price: formData.old_price,
         discount: formData.discount,
-        image_url: formData.image,
+        image: formData.image,
         image_path: formData.image_path,
         image_bucket: formData.image_bucket,
         category: formData.category,
         stock: formData.stock,
-        featured: formData.featured
+        featured: formData.featured,
+        sku: sku
       };
       
       let error;
@@ -283,7 +298,8 @@ const ProductsManagement = () => {
   const filteredProducts = products.filter(product => 
     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.category.toLowerCase().includes(searchTerm.toLowerCase())
+    product.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (product.sku && product.sku.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   if (isLoading) {
@@ -312,7 +328,7 @@ const ProductsManagement = () => {
         <div className="relative mb-6">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Buscar productos..."
+            placeholder="Buscar productos por nombre, categoría o SKU..."
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             className="pl-10"
@@ -326,6 +342,7 @@ const ProductsManagement = () => {
                 <TableHead>ID</TableHead>
                 <TableHead>Imagen</TableHead>
                 <TableHead>Nombre</TableHead>
+                <TableHead>SKU</TableHead>
                 <TableHead>Precio</TableHead>
                 <TableHead>Categoría</TableHead>
                 <TableHead>Stock</TableHead>
@@ -336,7 +353,7 @@ const ProductsManagement = () => {
             <TableBody>
               {filteredProducts.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center">
+                  <TableCell colSpan={9} className="text-center">
                     No se encontraron productos
                   </TableCell>
                 </TableRow>
@@ -352,6 +369,7 @@ const ProductsManagement = () => {
                       />
                     </TableCell>
                     <TableCell className="font-medium">{product.name}</TableCell>
+                    <TableCell>{product.sku || '-'}</TableCell>
                     <TableCell>${product.price.toFixed(2)}</TableCell>
                     <TableCell>{product.category}</TableCell>
                     <TableCell>{product.stock}</TableCell>
@@ -425,6 +443,23 @@ const ProductsManagement = () => {
                       </SelectContent>
                     </Select>
                   </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="sku" className="flex items-center gap-1">
+                    <Tag className="h-4 w-4" />
+                    SKU (Código de Producto)
+                  </Label>
+                  <Input
+                    id="sku"
+                    name="sku"
+                    value={formData.sku}
+                    onChange={handleInputChange}
+                    placeholder="Dejar en blanco para generar automáticamente"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Un código único para identificar este producto. Si se deja en blanco, se generará automáticamente.
+                  </p>
                 </div>
                 
                 <div className="space-y-2">

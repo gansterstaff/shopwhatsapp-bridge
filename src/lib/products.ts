@@ -12,7 +12,8 @@ export const products: Product[] = [
     image: "https://images.unsplash.com/photo-1590658609974-521597af1fae?q=80&w=1000&auto=format&fit=crop",
     category: "Audio",
     stock: 15,
-    featured: true
+    featured: true,
+    sku: "AUD-12345"
   },
   {
     id: 2,
@@ -24,7 +25,8 @@ export const products: Product[] = [
     image: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?q=80&w=1000&auto=format&fit=crop",
     category: "Wearables",
     stock: 10,
-    featured: true
+    featured: true,
+    sku: "WEA-23456"
   },
   {
     id: 3,
@@ -36,7 +38,8 @@ export const products: Product[] = [
     image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=1000&auto=format&fit=crop",
     category: "Computers",
     stock: 5,
-    featured: true
+    featured: true,
+    sku: "COM-34567"
   },
   {
     id: 4,
@@ -46,7 +49,8 @@ export const products: Product[] = [
     image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=1000&auto=format&fit=crop",
     category: "Photography",
     stock: 3,
-    featured: false
+    featured: false,
+    sku: "PHO-45678"
   },
   {
     id: 5,
@@ -58,7 +62,8 @@ export const products: Product[] = [
     image: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=1000&auto=format&fit=crop",
     category: "Audio",
     stock: 8,
-    featured: true
+    featured: true,
+    sku: "AUD-56789"
   },
   {
     id: 6,
@@ -68,7 +73,8 @@ export const products: Product[] = [
     image: "https://images.unsplash.com/photo-1582139329536-e7284fece509?q=80&w=1000&auto=format&fit=crop",
     category: "Security",
     stock: 12,
-    featured: false
+    featured: false,
+    sku: "SEC-67890"
   },
   // Auto parts mock data
   {
@@ -81,7 +87,8 @@ export const products: Product[] = [
     image: "https://images.unsplash.com/photo-1582038279036-3d95a6f89ec9?q=80&w=1000&auto=format&fit=crop",
     category: "Brakes",
     stock: 20,
-    featured: true
+    featured: true,
+    sku: "BRK-78901"
   },
   {
     id: 8,
@@ -93,7 +100,8 @@ export const products: Product[] = [
     image: "https://images.unsplash.com/photo-1600661653561-629509216228?q=80&w=1000&auto=format&fit=crop",
     category: "Lighting",
     stock: 15,
-    featured: true
+    featured: true,
+    sku: "LIG-89012"
   },
   {
     id: 9,
@@ -105,7 +113,8 @@ export const products: Product[] = [
     image: "https://images.unsplash.com/photo-1636901942318-972ea62b4d5d?q=80&w=1000&auto=format&fit=crop",
     category: "Engine",
     stock: 50,
-    featured: false
+    featured: false,
+    sku: "ENG-90123"
   },
   {
     id: 10,
@@ -117,7 +126,8 @@ export const products: Product[] = [
     image: "https://images.unsplash.com/photo-1659175323873-f8ad605cbf84?q=80&w=1000&auto=format&fit=crop",
     category: "Engine",
     stock: 8,
-    featured: true
+    featured: true,
+    sku: "ENG-01234"
   },
   {
     id: 11,
@@ -129,7 +139,8 @@ export const products: Product[] = [
     image: "https://images.unsplash.com/photo-1547949003-9792a18a2601?q=80&w=1000&auto=format&fit=crop",
     category: "Audio",
     stock: 6,
-    featured: true
+    featured: true,
+    sku: "AUD-12346"
   },
   {
     id: 12,
@@ -141,7 +152,8 @@ export const products: Product[] = [
     image: "https://images.unsplash.com/photo-1537019575197-56dc5197fe87?q=80&w=1000&auto=format&fit=crop",
     category: "Interior",
     stock: 30,
-    featured: false
+    featured: false,
+    sku: "INT-23457"
   }
 ];
 

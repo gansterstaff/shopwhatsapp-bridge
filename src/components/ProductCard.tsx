@@ -14,7 +14,7 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
-  const { id, name, price, oldPrice, discount, image, category } = product;
+  const { id, name, price, oldPrice, discount, image, category, sku } = product;
   const { addItem } = useCart();
   const { toast } = useToast();
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
@@ -27,7 +27,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
 
   // Generador de mensaje para WhatsApp
   const generateWhatsAppLink = (product: Product) => {
-    const message = `Hola, estoy interesado en comprar el producto: *${product.name}* por $${product.price}. ¿Podría darme más información?`;
+    const message = `Hola, estoy interesado en comprar el producto: *${product.name}* (SKU: ${product.sku || 'N/A'}) por $${product.price}. ¿Podría darme más información?`;
     return `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
   };
   
@@ -113,6 +113,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
               {name}
             </Link>
           </h3>
+          
+          {sku && (
+            <div className="text-xs text-muted-foreground mb-1">
+              SKU: {sku}
+            </div>
+          )}
           
           <div className="flex items-center gap-2">
             <span className="font-semibold">${price.toFixed(2)}</span>

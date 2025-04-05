@@ -4,13 +4,13 @@ import Hero from '@/components/Hero';
 import FeaturedProducts from '@/components/FeaturedProducts';
 import Benefits from '@/components/Benefits';
 import Testimonials from '@/components/Testimonials';
-import Newsletter from '@/components/Newsletter';
 import Categories from '@/components/Categories';
 import WhyChooseUs from '@/components/WhyChooseUs';
 import PromotionalBanner from '@/components/PromotionalBanner';
 import AboutCarousel from '@/components/AboutCarousel';
 import FestiveBanner from '@/components/FestiveBanner';
 import PublicLayout from '@/components/layouts/PublicLayout';
+import NewArrivals from '@/components/NewArrivals';
 
 const Index: React.FC = () => {
   // Add a smooth scroll effect when page loads
@@ -32,7 +32,7 @@ const Index: React.FC = () => {
           <WhyChooseUs />
           <Benefits />
           <Testimonials />
-          <Newsletter />
+          <NewArrivals />
         </main>
         <FestiveBanner />
       </div>

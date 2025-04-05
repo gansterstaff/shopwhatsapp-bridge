@@ -126,33 +126,55 @@ const Footer: React.FC = () => {
             </ul>
           </div>
           
-          {/* Boletín */}
+          {/* Nuestras Redes */}
           <div>
-            <h3 className="font-medium text-lg mb-4">Suscríbete a Nuestro Boletín</h3>
-            <p className="text-muted-foreground text-sm mb-4">
-              Suscríbete para recibir ofertas especiales, sorteos y promociones exclusivas.
-            </p>
-            <form className="flex">
-              <input 
-                type="email" 
-                placeholder="Tu email" 
-                className={cn(
-                  "flex-1 px-4 py-2 text-sm rounded-l-md",
-                  "bg-white dark:bg-gray-800 border border-border",
-                  "focus:outline-none focus:ring-1 focus:ring-primary"
-                )}
-              />
-              <button 
-                type="submit" 
-                className={cn(
-                  "px-4 py-2 rounded-r-md",
-                  "bg-primary text-primary-foreground",
-                  "hover:bg-primary/90 transition-colors"
-                )}
-              >
-                <Send className="h-4 w-4" />
-              </button>
-            </form>
+            <h3 className="font-medium text-lg mb-4">Nuestras Redes</h3>
+            <ul className="space-y-2">
+              <li>
+                <a 
+                  href="https://instagram.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2"
+                >
+                  <Instagram className="h-4 w-4" />
+                  Instagram
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://facebook.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2"
+                >
+                  <Facebook className="h-4 w-4" />
+                  Facebook
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://twitter.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2"
+                >
+                  <Twitter className="h-4 w-4" />
+                  Twitter
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://wa.me/1234567890" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2"
+                >
+                  <Send className="h-4 w-4" />
+                  WhatsApp
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
         
