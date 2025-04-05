@@ -50,8 +50,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signIn = async (email: string, password: string) => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { error, data } = await supabase.auth.signInWithPassword({ email, password });
+      
       if (error) throw error;
+      
+      // Check if email is confirmed
+      if (data.user && !data.user.email_confirmed_at) {
+        toast({
+          title: "Email no confirmado",
+          description: "Por favor, confirma tu correo electrónico para iniciar sesión. Revisa tu bandeja de entrada.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       toast({
         title: "Bienvenido de nuevo!",
         description: "Has iniciado sesión correctamente.",
@@ -100,9 +112,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       toast({
         title: "Cuenta creada!",
-        description: "Por favor, verifica tu correo electrónico para confirmar tu cuenta.",
+        description: "Por favor, verifica tu correo electrónico para confirmar tu cuenta. Revisa también la carpeta de spam.",
       });
-      navigate('/');
+      // We don't navigate away to show the confirmation message
     } catch (error: any) {
       toast({
         title: "Error al registrarse",

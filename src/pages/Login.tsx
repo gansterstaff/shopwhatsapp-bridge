@@ -8,12 +8,14 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import { Github, Facebook } from 'lucide-react';
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showConfirmationMessage, setShowConfirmationMessage] = useState(false);
   const { signIn, signUp, signInWithGoogle, signInWithGithub, signInWithFacebook } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -33,6 +35,7 @@ const Login = () => {
     setIsLoading(true);
     try {
       await signUp(email, password, name);
+      setShowConfirmationMessage(true);
     } catch (error) {
       console.error(error);
     } finally {
@@ -50,6 +53,15 @@ const Login = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {showConfirmationMessage && (
+            <Alert className="mb-4 bg-primary/10 border-primary/20">
+              <AlertDescription className="font-medium text-primary">
+                ¡Gracias por registrarte! Por favor revisa tu correo electrónico para confirmar tu cuenta. 
+                Si no encuentras el correo, revisa tu carpeta de spam.
+              </AlertDescription>
+            </Alert>
+          )}
+          
           <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="login">Iniciar Sesión</TabsTrigger>
