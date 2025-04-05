@@ -4,17 +4,18 @@ import { Helmet } from 'react-helmet';
 import SalesReport from '@/components/admin/SalesReport';
 import BannerManagerRefactored from '@/components/admin/BannerManagerRefactored';
 import SupportMessages from '@/components/admin/SupportMessages';
+import AnalyticsDashboard from '@/components/admin/AnalyticsDashboard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
-import { BarChart2, MessageSquare, Image, ShoppingBag, Settings } from 'lucide-react';
+import { BarChart2, MessageSquare, Image, ShoppingBag, Settings, BarChart3 } from 'lucide-react';
 
 const AdminDashboard = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<string>('overview');
+  const [activeTab, setActiveTab] = useState<string>('analytics');
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
@@ -31,7 +32,11 @@ const AdminDashboard = () => {
         <h1 className="text-3xl font-bold mb-6">Panel de Administración</h1>
 
         <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
-          <TabsList className="grid grid-cols-5 w-full">
+          <TabsList className="grid grid-cols-6 w-full">
+            <TabsTrigger value="analytics" className="flex items-center justify-center">
+              <BarChart3 className="h-4 w-4 mr-2" />
+              <span>Analíticas</span>
+            </TabsTrigger>
             <TabsTrigger value="overview" className="flex items-center justify-center">
               <BarChart2 className="h-4 w-4 mr-2" />
               <span>Reportes</span>
@@ -53,6 +58,10 @@ const AdminDashboard = () => {
               <span>Configuración</span>
             </TabsTrigger>
           </TabsList>
+
+          <TabsContent value="analytics">
+            <AnalyticsDashboard />
+          </TabsContent>
 
           <TabsContent value="overview">
             <SalesReport />

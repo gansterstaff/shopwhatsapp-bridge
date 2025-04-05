@@ -7,6 +7,7 @@ import type { Product } from '@/lib/types';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/hooks/use-toast';
 import ProductQuickViewModal from './ProductQuickViewModal';
+import { trackWhatsAppClick, trackProductView } from '@/lib/analytics';
 
 interface ProductCardProps {
   product: Product;
@@ -25,10 +26,25 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
     setIsQuickViewOpen(true);
   };
 
+  // Registrar vista de producto cuando se renderiza el componente
+  React.useEffect(() => {
+    // Se envuelve en un timeout para asegurar que no afecta el rendimiento inicial
+    const timer = setTimeout(() => {
+      trackProductView(id, name, category);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [id, name, category]);
+
   // Generador de mensaje para WhatsApp
   const generateWhatsAppLink = (product: Product) => {
     const message = `Hola, estoy interesado en comprar el producto: *${product.name}* (SKU: ${product.sku || 'N/A'}) por $${product.price}. ¿Podría darme más información?`;
     return `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
+  };
+
+  const handleWhatsAppClick = (e: React.MouseEvent) => {
+    // Registrar el clic para analíticas
+    trackWhatsAppClick(id, name, category);
   };
   
   // Traducir categorías al español para SEO
@@ -138,7 +154,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
               )}
               onClick={handleAddToCart}
             >
-              Añadir al Carrito
+              Ver Detalle
             </button>
             
             <a 
@@ -150,6 +166,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
                 "bg-[#25D366] text-white",
                 "transition-all duration-300 hover:bg-[#25D366]/90"
               )}
+              onClick={handleWhatsAppClick}
             >
               Comprar Ahora
             </a>
