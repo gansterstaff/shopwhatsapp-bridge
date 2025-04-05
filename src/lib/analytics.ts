@@ -125,3 +125,64 @@ export const trackTrafficSource = () => {
     referrer: source,
   });
 };
+
+// Nuevas funciones para métricas específicas
+
+// Función para registrar cuando un usuario abandona el carrito
+export const trackCartAbandonment = (productIds: number[], totalValue: number) => {
+  return trackEvent({
+    eventType: 'cart_abandon',
+    page: window.location.pathname,
+    referrer: document.referrer,
+    buttonText: `Carrito: ${productIds.length} productos, Valor: ${totalValue}`
+  });
+};
+
+// Función para registrar cuando un usuario inicia sesión
+export const trackUserLogin = (userId: string) => {
+  return trackEvent({
+    eventType: 'user_login',
+    userId,
+    page: window.location.pathname,
+    referrer: document.referrer
+  });
+};
+
+// Función para registrar cuando un usuario se registra
+export const trackUserRegistration = (userId: string) => {
+  return trackEvent({
+    eventType: 'user_registration',
+    userId,
+    page: window.location.pathname,
+    referrer: document.referrer
+  });
+};
+
+// Función para registrar clics en botones específicos
+export const trackButtonClick = (buttonText: string, page: string) => {
+  return trackEvent({
+    eventType: 'button_click',
+    buttonText,
+    page,
+    referrer: document.referrer
+  });
+};
+
+// Función para registrar tiempo pasado en una página
+export const trackPageTime = (page: string, timeSeconds: number) => {
+  return trackEvent({
+    eventType: 'page_time',
+    page,
+    buttonText: `${timeSeconds} segundos`,
+    referrer: document.referrer
+  });
+};
+
+// Función para registrar visita a página
+export const trackPageView = (page: string) => {
+  return trackEvent({
+    eventType: 'page_view',
+    page,
+    referrer: document.referrer
+  });
+};

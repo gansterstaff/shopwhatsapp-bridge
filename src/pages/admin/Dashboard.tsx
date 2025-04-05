@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
-import SalesReport from '@/components/admin/SalesReport';
+import UserExperienceTracking from '@/components/admin/UserExperienceTracking';
 import BannerManagerRefactored from '@/components/admin/BannerManagerRefactored';
 import SupportMessages from '@/components/admin/SupportMessages';
 import AnalyticsDashboard from '@/components/admin/AnalyticsDashboard';
@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
-import { BarChart2, MessageSquare, Image, ShoppingBag, Settings, BarChart3 } from 'lucide-react';
+import { BarChart2, MessageSquare, Image, ShoppingBag, Settings, BarChart3, Activity } from 'lucide-react';
 
 const AdminDashboard = () => {
   const { toast } = useToast();
@@ -37,9 +37,9 @@ const AdminDashboard = () => {
               <BarChart3 className="h-4 w-4 mr-2" />
               <span>Analíticas</span>
             </TabsTrigger>
-            <TabsTrigger value="overview" className="flex items-center justify-center">
-              <BarChart2 className="h-4 w-4 mr-2" />
-              <span>Reportes</span>
+            <TabsTrigger value="ux" className="flex items-center justify-center">
+              <Activity className="h-4 w-4 mr-2" />
+              <span>Experiencia de Usuario</span>
             </TabsTrigger>
             <TabsTrigger value="banners" className="flex items-center justify-center">
               <Image className="h-4 w-4 mr-2" />
@@ -63,8 +63,8 @@ const AdminDashboard = () => {
             <AnalyticsDashboard />
           </TabsContent>
 
-          <TabsContent value="overview">
-            <SalesReport />
+          <TabsContent value="ux">
+            <UserExperienceTracking />
           </TabsContent>
 
           <TabsContent value="banners">
