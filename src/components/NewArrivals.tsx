@@ -4,21 +4,14 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, ShoppingBag } from 'lucide-react';
 import ProductCard from './ProductCard';
 import { cn } from '@/lib/utils';
-import { useProducts } from '@/hooks/useProducts';
+import { useNewProducts } from '@/hooks/useProducts';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const NewArrivals: React.FC = () => {
-  const { data: products, isLoading, error } = useProducts();
-  
-  // Get the most recent products (up to 4)
-  const newProducts = products
-    ? [...products]
-        .sort((a, b) => b.id - a.id) // Sort by ID descending (assuming higher ID = newer product)
-        .slice(0, 4)
-    : [];
+  const { data: products, isLoading, error } = useNewProducts();
   
   // Fallback to local data if there's an error or we're still loading
-  const showFallbackData = isLoading || error || !newProducts?.length;
+  const showFallbackData = isLoading || error || !products?.length;
   
   // If error, log it but don't show to user
   if (error) {
@@ -67,7 +60,7 @@ const NewArrivals: React.FC = () => {
             ))
           ) : (
             // Render actual products from Supabase
-            newProducts.map((product) => (
+            products.map((product) => (
               <div key={product.id} className="animate-fade-in" style={{ animationDelay: `${(product.id % 4) * 0.1}s` }}>
                 <ProductCard product={product} />
               </div>

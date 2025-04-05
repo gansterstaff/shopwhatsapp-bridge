@@ -94,6 +94,7 @@ export type Database = {
           name: string
           old_price: number | null
           price: number
+          sku: string | null
           stock: number
         }
         Insert: {
@@ -109,6 +110,7 @@ export type Database = {
           name: string
           old_price?: number | null
           price: number
+          sku?: string | null
           stock?: number
         }
         Update: {
@@ -124,6 +126,7 @@ export type Database = {
           name?: string
           old_price?: number | null
           price?: number
+          sku?: string | null
           stock?: number
         }
         Relationships: []
