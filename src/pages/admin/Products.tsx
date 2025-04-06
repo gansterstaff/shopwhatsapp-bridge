@@ -26,6 +26,7 @@ const ProductsManagement = () => {
     categories,
     setSearchTerm,
     setIsModalOpen,
+    setIsDeleteDialogOpen,
     fetchProducts,
     handleInputChange,
     handleSelectChange,
