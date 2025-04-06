@@ -360,7 +360,7 @@ const ProductsManagement = () => {
                     <TableCell>{product.id}</TableCell>
                     <TableCell>
                       <img 
-                        src={product.image} 
+                        src={product.imageUrl || product.image} 
                         alt={product.name} 
                         className="h-12 w-12 object-cover rounded"
                       />
@@ -540,7 +540,7 @@ const ProductsManagement = () => {
                 </div>
                 
                 <ImageUpload
-                  initialImageUrl={formData.image}
+                  initialImageUrl={formData.image_url}
                   onImageSelected={handleImageSelected}
                   label="Imagen del producto"
                   bucketName="products"
