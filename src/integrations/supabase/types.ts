@@ -9,6 +9,51 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      analytics_events: {
+        Row: {
+          button_text: string | null
+          category: string | null
+          event_type: string
+          id: string
+          page: string | null
+          product_id: number | null
+          product_name: string | null
+          referrer: string | null
+          search_query: string | null
+          session_id: string
+          timestamp: string
+          user_id: string | null
+        }
+        Insert: {
+          button_text?: string | null
+          category?: string | null
+          event_type: string
+          id?: string
+          page?: string | null
+          product_id?: number | null
+          product_name?: string | null
+          referrer?: string | null
+          search_query?: string | null
+          session_id: string
+          timestamp?: string
+          user_id?: string | null
+        }
+        Update: {
+          button_text?: string | null
+          category?: string | null
+          event_type?: string
+          id?: string
+          page?: string | null
+          product_id?: number | null
+          product_name?: string | null
+          referrer?: string | null
+          search_query?: string | null
+          session_id?: string
+          timestamp?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           id: string
@@ -245,7 +290,40 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      get_event_metrics: {
+        Args: {
+          event_type: string
+          start_date: string
+          end_date: string
+        }
+        Returns: {
+          total_count: number
+          unique_users: number
+          daily_counts: Json
+        }[]
+      }
+      get_loyal_user_metrics: {
+        Args: {
+          min_visits: number
+          start_date: string
+          end_date: string
+        }
+        Returns: {
+          user_id: string
+          visit_count: number
+          last_visit: string
+        }[]
+      }
+      get_user_registrations: {
+        Args: {
+          start_date: string
+          end_date: string
+        }
+        Returns: {
+          total_count: number
+          daily_counts: Json
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
