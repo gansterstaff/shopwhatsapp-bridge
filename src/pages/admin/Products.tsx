@@ -42,7 +42,7 @@ const ProductsManagement = () => {
     price: 0,
     old_price: null as number | null,
     discount: null as number | null,
-    image: '',
+    image_url: '', // Changed from 'image' to 'image_url'
     image_path: '',
     image_bucket: 'products',
     category: '',
@@ -136,7 +136,7 @@ const ProductsManagement = () => {
   const handleImageSelected = (imageData: { url: string, path?: string, bucket?: string }) => {
     setFormData(prev => ({
       ...prev,
-      image: imageData.url,
+      image_url: imageData.url, // Changed from 'image' to 'image_url'
       image_path: imageData.path || '',
       image_bucket: imageData.bucket || 'products'
     }));
@@ -156,7 +156,7 @@ const ProductsManagement = () => {
       price: 0,
       old_price: null,
       discount: null,
-      image: '',
+      image_url: '', // Changed from 'image' to 'image_url'
       image_path: '',
       image_bucket: 'products',
       category: '',
@@ -174,7 +174,7 @@ const ProductsManagement = () => {
       price: product.price,
       old_price: product.oldPrice || null,
       discount: product.discount || null,
-      image: product.image,
+      image_url: product.imageUrl || product.image, // Changed from 'image' to 'image_url'
       image_path: product.imagePath || '',
       image_bucket: product.imageBucket || 'products',
       category: product.category,
@@ -207,7 +207,7 @@ const ProductsManagement = () => {
         price: formData.price,
         old_price: formData.old_price,
         discount: formData.discount,
-        image: formData.image,
+        image_url: formData.image_url, // Changed from 'image' to 'image_url'
         image_path: formData.image_path,
         image_bucket: formData.image_bucket,
         category: formData.category,

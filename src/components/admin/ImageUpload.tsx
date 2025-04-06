@@ -135,7 +135,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       </div>
 
       {uploadType === 'url' ? (
-        <form onSubmit={handleUrlSubmit} className="flex gap-2">
+        <div className="flex gap-2">
           <Input
             type="url"
             placeholder="https://ejemplo.com/imagen.jpg"
@@ -143,10 +143,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             onChange={(e) => setUrlInput(e.target.value)}
             className="flex-1"
           />
-          <Button type="submit" disabled={!urlInput.trim()}>
+          <Button type="button" onClick={handleUrlSubmit} disabled={!urlInput.trim()}>
             Usar URL
           </Button>
-        </form>
+        </div>
       ) : (
         <div className="flex items-center gap-2">
           <Input
