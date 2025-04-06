@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase';
@@ -16,7 +17,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow 
 } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Edit, Trash2, Plus, RefreshCw } from 'lucide-react';
+import { Edit, Trash2, Plus, RefreshCw, Eye, EyeOff } from 'lucide-react';
 import ImageUpload from './ImageUpload';
 
 // Types for banner structure
@@ -42,6 +43,8 @@ const BannerManagerRefactored = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedBannerId, setSelectedBannerId] = useState<number | null>(null);
+  const [previewBanner, setPreviewBanner] = useState<Banner | null>(null);
+  const [showPreview, setShowPreview] = useState(false);
 
   // Form state
   const [formData, setFormData] = useState<Banner>({
@@ -75,6 +78,13 @@ const BannerManagerRefactored = () => {
       if (error) throw error;
 
       setBanners(data || []);
+      
+      // Set first active banner as preview if available
+      const activeBanner = data?.find(banner => banner.active);
+      if (activeBanner && !previewBanner) {
+        setPreviewBanner(activeBanner);
+        setShowPreview(true);
+      }
     } catch (error: any) {
       console.error('Error fetching banners:', error);
       toast({
@@ -115,7 +125,7 @@ const BannerManagerRefactored = () => {
       background_color: banner.background_color,
       text_color: banner.text_color,
       image: banner.image || '',
-      image_url: banner.image || '',
+      image_url: banner.image_url || '',
       image_path: banner.image_path || '',
       image_bucket: banner.image_bucket || 'banners'
     });
@@ -190,20 +200,33 @@ const BannerManagerRefactored = () => {
             title: "Banner actualizado",
             description: "El banner se ha actualizado correctamente",
           });
+          
+          // If the updated banner is the one being previewed, update preview
+          if (previewBanner && previewBanner.id === formData.id) {
+            setPreviewBanner({ ...formData });
+          }
         }
       } else {
         // Create new banner
-        const { error: insertError } = await supabase
+        const { error: insertError, data } = await supabase
           .from('promotional_banners')
-          .insert([bannerData]);
+          .insert([bannerData])
+          .select('*')
+          .single();
           
         error = insertError;
         
-        if (!insertError) {
+        if (!insertError && data) {
           toast({
             title: "Banner añadido",
             description: "El banner se ha añadido correctamente",
           });
+          
+          // If this is the first banner or it's active, set it as preview
+          if (!previewBanner || data.active) {
+            setPreviewBanner(data);
+            setShowPreview(true);
+          }
         }
       }
       
@@ -227,6 +250,12 @@ const BannerManagerRefactored = () => {
     if (!selectedBannerId) return;
     
     try {
+      // If the banner being deleted is the preview, reset preview
+      if (previewBanner && previewBanner.id === selectedBannerId) {
+        setPreviewBanner(null);
+        setShowPreview(false);
+      }
+      
       const { error } = await supabase
         .from('promotional_banners')
         .delete()
@@ -252,8 +281,57 @@ const BannerManagerRefactored = () => {
     }
   };
 
+  // Set a banner for preview
+  const setPreviewBannerById = (id: number) => {
+    const banner = banners.find(b => b.id === id);
+    if (banner) {
+      setPreviewBanner(banner);
+      setShowPreview(true);
+    }
+  };
+
+  // Toggle preview visibility
+  const togglePreview = () => {
+    setShowPreview(prev => !prev);
+  };
+
   // Preview banner with current settings
-  const BannerPreview = () => {
+  const BannerPreview = ({ banner }: { banner: Banner }) => {
+    if (!banner) return null;
+    
+    return (
+      <div 
+        className="p-4 rounded-md shadow-md mt-4 transition-all" 
+        style={{
+          backgroundColor: banner.background_color,
+          color: banner.text_color
+        }}
+      >
+        <div className="flex items-center space-x-4">
+          {banner.image_url && (
+            <img 
+              src={banner.image_url} 
+              alt="Banner preview" 
+              className="h-16 w-16 object-cover rounded-md"
+            />
+          )}
+          <div>
+            <h3 className="font-bold">{banner.title || 'Título del banner'}</h3>
+            <p>{banner.content || 'Contenido del banner'}</p>
+            {banner.code && (
+              <div className="mt-1">
+                Código: <span className="font-mono bg-opacity-20 bg-white px-1 rounded">{banner.code}</span>
+                {banner.discount ? ` (${banner.discount}% descuento)` : ''}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Modal form preview
+  const FormBannerPreview = () => {
     return (
       <div className="mt-4 p-4 rounded-md" style={{
         backgroundColor: formData.background_color,
@@ -306,6 +384,36 @@ const BannerManagerRefactored = () => {
       </CardHeader>
       
       <CardContent>
+        {/* Banner Preview Section */}
+        <div className="mb-6 border rounded-md p-4 bg-muted/30">
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="font-medium text-lg">Previsualización de banner</h3>
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={togglePreview}
+            >
+              {showPreview ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+            </Button>
+          </div>
+          
+          {showPreview && previewBanner ? (
+            <BannerPreview banner={previewBanner} />
+          ) : (
+            <div className="py-8 text-center text-muted-foreground">
+              {banners.length > 0 ? (
+                <p>Haga clic en "Ver" en cualquier banner para previsualizar cómo se verá en la tienda</p>
+              ) : (
+                <p>No hay banners disponibles para previsualizar</p>
+              )}
+            </div>
+          )}
+        </div>
+
         <div className="flex justify-end mb-4">
           <Button onClick={openAddModal}>
             <Plus className="h-4 w-4 mr-2" /> Añadir Banner
@@ -341,9 +449,9 @@ const BannerManagerRefactored = () => {
                         backgroundColor: banner.background_color,
                         color: banner.text_color
                       }}>
-                        {banner.image ? (
+                        {banner.image_url ? (
                           <img 
-                            src={banner.image} 
+                            src={banner.image_url} 
                             alt="Banner" 
                             className="h-8 w-8 object-cover rounded mr-1"
                           />
@@ -359,6 +467,14 @@ const BannerManagerRefactored = () => {
                     </TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          onClick={() => setPreviewBannerById(banner.id)}
+                          title="Ver previsualización"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
                         <Button 
                           size="sm" 
                           variant="outline" 
@@ -505,7 +621,7 @@ const BannerManagerRefactored = () => {
                 folderPath="promotional"
               />
               
-              <BannerPreview />
+              <FormBannerPreview />
             </div>
             
             <DialogFooter>
