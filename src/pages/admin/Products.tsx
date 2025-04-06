@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -143,10 +142,9 @@ const ProductsManagement = () => {
     }));
   };
 
-  // Function to generate a unique SKU if none is provided
   const generateSKU = () => {
     const prefix = formData.category.substring(0, 3).toUpperCase();
-    const randomNum = Math.floor(10000 + Math.random() * 90000); // 5-digit random number
+    const randomNum = Math.floor(10000 + Math.random() * 90000);
     return `${prefix}-${randomNum}`;
   };
 
@@ -201,7 +199,6 @@ const ProductsManagement = () => {
     e.preventDefault();
     
     try {
-      // Generate SKU if not provided
       const sku = formData.sku || generateSKU();
       
       const productData = {

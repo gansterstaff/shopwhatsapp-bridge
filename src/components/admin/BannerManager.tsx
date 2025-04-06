@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase';
@@ -21,6 +20,8 @@ interface Banner {
   background_color: string;
   text_color: string;
   image_url?: string;
+  image_path?: string;
+  image_bucket?: string;
 }
 
 const defaultBanner: Banner = {
@@ -110,10 +111,10 @@ const BannerManager = () => {
       // Crear bucket si no existe
       const { data: bucketData, error: bucketError } = await supabase
         .storage
-        .getBucket('banner-images');
+        .getBucket('banners');
         
       if (bucketError && bucketError.message.includes('not found')) {
-        await supabase.storage.createBucket('banner-images', {
+        await supabase.storage.createBucket('banners', {
           public: true
         });
       }
@@ -125,7 +126,7 @@ const BannerManager = () => {
       
       const { data, error } = await supabase
         .storage
-        .from('banner-images')
+        .from('banners')
         .upload(filePath, selectedImage, {
           upsert: true
         });
@@ -135,15 +136,17 @@ const BannerManager = () => {
       // Obtener URL pública
       const { data: publicUrlData } = supabase
         .storage
-        .from('banner-images')
+        .from('banners')
         .getPublicUrl(filePath);
         
       const imageUrl = publicUrlData.publicUrl;
       
-      // Actualizar banner con la URL de la imagen
+      // Actualizar banner con la URL y ruta de la imagen
       setCurrentBanner(prev => ({
         ...prev,
-        image_url: imageUrl
+        image_url: imageUrl,
+        image_path: filePath,
+        image_bucket: 'banners'
       }));
       
       toast({
@@ -173,7 +176,12 @@ const BannerManager = () => {
         const { id, ...newBanner } = currentBanner;
         response = await supabase
           .from('promotional_banners')
-          .insert([newBanner])
+          .insert([{ 
+            ...newBanner,
+            image_url: currentBanner.image_url,
+            image_path: currentBanner.image_path || null,
+            image_bucket: currentBanner.image_bucket || 'banners'
+          }])
           .select();
           
         if (response.error) throw response.error;
@@ -186,7 +194,12 @@ const BannerManager = () => {
         // Actualizar banner existente
         response = await supabase
           .from('promotional_banners')
-          .update(currentBanner)
+          .update({
+            ...currentBanner,
+            image_url: currentBanner.image_url,
+            image_path: currentBanner.image_path || null,
+            image_bucket: currentBanner.image_bucket || 'banners'
+          })
           .eq('id', currentBanner.id)
           .select();
           

@@ -13,7 +13,7 @@ export interface Product {
   category: string;
   stock: number;
   featured: boolean;
-  sku?: string; // Added SKU field
+  sku?: string;
 }
 
 export interface User {

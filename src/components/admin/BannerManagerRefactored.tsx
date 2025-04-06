@@ -30,6 +30,9 @@ interface Banner {
   background_color: string;
   text_color: string;
   image?: string;
+  image_url?: string;
+  image_path?: string;
+  image_bucket?: string;
 }
 
 const BannerManagerRefactored = () => {
@@ -50,7 +53,10 @@ const BannerManagerRefactored = () => {
     active: true,
     background_color: '#000000',
     text_color: '#FFFFFF',
-    image: ''
+    image: '',
+    image_url: '',
+    image_path: '',
+    image_bucket: 'banners'
   });
 
   // Fetch banners on component mount
@@ -91,7 +97,10 @@ const BannerManagerRefactored = () => {
       active: true,
       background_color: '#000000',
       text_color: '#FFFFFF',
-      image: ''
+      image: '',
+      image_url: '',
+      image_path: '',
+      image_bucket: 'banners'
     });
   };
 
@@ -105,7 +114,10 @@ const BannerManagerRefactored = () => {
       active: banner.active,
       background_color: banner.background_color,
       text_color: banner.text_color,
-      image: banner.image || ''
+      image: banner.image || '',
+      image_url: banner.image || '',
+      image_path: banner.image_path || '',
+      image_bucket: banner.image_bucket || 'banners'
     });
     setIsModalOpen(true);
   };
@@ -138,7 +150,10 @@ const BannerManagerRefactored = () => {
   const handleImageSelected = (imageData: { url: string, path?: string, bucket?: string }) => {
     setFormData(prev => ({
       ...prev,
-      image: imageData.url
+      image: imageData.url,
+      image_url: imageData.url,
+      image_path: imageData.path || '',
+      image_bucket: imageData.bucket || 'banners'
     }));
   };
 
@@ -154,7 +169,9 @@ const BannerManagerRefactored = () => {
         active: formData.active,
         background_color: formData.background_color,
         text_color: formData.text_color,
-        image: formData.image || null
+        image_url: formData.image_url || formData.image || null,
+        image_path: formData.image_path || null,
+        image_bucket: formData.image_bucket || 'banners'
       };
       
       let error;

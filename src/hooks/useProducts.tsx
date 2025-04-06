@@ -10,8 +10,8 @@ const normalizeProduct = (product: any): Product => {
     ...product,
     oldPrice: product.old_price,
     // Maintain backward compatibility for image field
-    image: product.image_url,
-    imageUrl: product.image_url,
+    image: product.image_url || product.image,
+    imageUrl: product.image_url || product.image,
     imagePath: product.image_path,
     imageBucket: product.image_bucket,
     sku: product.sku
